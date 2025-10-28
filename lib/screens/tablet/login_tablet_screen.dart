@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
-import 'package:pain_scale_app/screens/mobile/register_mobile_screen.dart';
+import 'package:pain_scale_app/screens/tablet/register_tablet_screen.dart';
 import 'package:pain_scale_app/screens/screens.dart';
 
-class LoginMobileScreen extends StatefulWidget {
-  const LoginMobileScreen({super.key});
+class LoginTabletScreen extends StatefulWidget {
+  const LoginTabletScreen({super.key});
 
   @override
-  State<LoginMobileScreen> createState() => _LoginMobileScreenState();
+  State<LoginTabletScreen> createState() => _LoginTabletScreenState();
 }
 
-class _LoginMobileScreenState extends State<LoginMobileScreen> {
+class _LoginTabletScreenState extends State<LoginTabletScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -102,7 +102,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const RegisterMobileScreen(),
+                      builder: (context) => const RegisterTabletScreen(),
                     ),
                   );
                 },

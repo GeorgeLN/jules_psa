@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'screens/screens.dart';
 import 'package:provider/provider.dart';
+import 'package:pain_scale_app/data/repositories/auth_repository.dart';
 import 'package:pain_scale_app/providers/providers.dart';
 
 void main() async {
@@ -35,6 +36,7 @@ void main() async {
 
     MultiProvider(
         providers: [
+          Provider(create: (_) => AuthRepository()),
           ChangeNotifierProvider(create: ( _ ) => WaveProvider()),
           ChangeNotifierProvider(create: ( _ ) => ImagenProvider()),
           ChangeNotifierProvider(create: ( _ ) => UserProvider()),
@@ -53,7 +55,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Escala de Dolor - App',
-        home: const ResponsiveSelectedEmojiScreen(),
+        home: const LoginMobileScreen(),
       ),
     );
   }
