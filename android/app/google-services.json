@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "108472526627",
+    "project_id": "pain-sacale-app",
+    "storage_bucket": "pain-sacale-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108472526627:android:237c89732e535851170e96",
+        "android_client_info": {
+          "package_name": "com.youthink.painscaleapp.pain_scale_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvCF_3g-ev6wOQDEots8argZAjKSfuYHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
