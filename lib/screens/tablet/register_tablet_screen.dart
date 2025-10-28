@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
-import 'package:pain_scale_app/screens/mobile/register_mobile_screen.dart';
 import 'package:pain_scale_app/screens/screens.dart';
 
-class LoginMobileScreen extends StatefulWidget {
-  const LoginMobileScreen({super.key});
+class RegisterTabletScreen extends StatefulWidget {
+  const RegisterTabletScreen({super.key});
 
   @override
-  State<LoginMobileScreen> createState() => _LoginMobileScreenState();
+  State<RegisterTabletScreen> createState() => _RegisterTabletScreenState();
 }
 
-class _LoginMobileScreenState extends State<LoginMobileScreen> {
+class _RegisterTabletScreenState extends State<RegisterTabletScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -23,10 +22,10 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final authRepository = Provider.of<AuthRepository>(context, listen: false);
-      final user = await authRepository.signInWithEmailAndPassword(
+      final user = await authRepository.createUserWithEmailAndPassword(
         _emailController.text,
         _passwordController.text,
       );
@@ -41,7 +40,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to sign in. Please check your credentials.'),
+            content: Text('Failed to register. Please try again.'),
           ),
         );
       }
@@ -52,7 +51,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Register'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,24 +88,16 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
                   }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters long';
+                  }
                   return null;
                 },
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _login,
-                child: const Text('Login'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterMobileScreen(),
-                    ),
-                  );
-                },
-                child: const Text('Don\'t have an account? Register'),
+                onPressed: _register,
+                child: const Text('Register'),
               ),
             ],
           ),
