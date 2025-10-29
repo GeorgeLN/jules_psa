@@ -1,4 +1,5 @@
-import 'package:app/data/models/patient_model.dart';
+
+import 'package:pain_scale_app/data/models/patient_model.dart';
 
 class UserModel {
   final String correo;
