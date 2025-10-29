@@ -7,6 +7,7 @@ import 'screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
 import 'package:pain_scale_app/providers/providers.dart';
+import 'package:pain_scale_app/viewmodels/storage_viewmodel.dart';
 
 void main() async {
   //Configuración inicial de Firebase para que no de errores.
@@ -40,6 +41,7 @@ void main() async {
           ChangeNotifierProvider(create: ( _ ) => WaveProvider()),
           ChangeNotifierProvider(create: ( _ ) => ImagenProvider()),
           ChangeNotifierProvider(create: ( _ ) => UserProvider()),
+          ChangeNotifierProvider(create: ( _ ) => StorageViewModel()),
         ],
         child: const MyApp(),
     ),
