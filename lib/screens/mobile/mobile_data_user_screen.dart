@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
@@ -296,11 +297,11 @@ class _ContinueButtonMState extends State<ContinueButtonM> {
         return;
       }
 
-      await storageViewModel.uploadImage(userProvider.userDocument);
+      await storageViewModel.uploadImage(userProvider.getAgeUser.toString());
 
       if (storageViewModel.imageUrl != null) {
         CollectionReference users = FirebaseFirestore.instance.collection('users');
-        users.doc(userProvider.userDocument).collection('patients').add({
+        users.doc(userProvider.getUser).collection('patients').add({
           'name': widget.nameController.text,
           'age': widget.ageController.text,
           'image': storageViewModel.imageUrl,
