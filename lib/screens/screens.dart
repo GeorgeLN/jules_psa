@@ -10,3 +10,6 @@ export 'package:pain_scale_app/screens/tablet/tablet_data_user_screen.dart';
 export 'package:pain_scale_app/screens/mobile/mobile_data_screen.dart';
 export 'package:pain_scale_app/screens/mobile/mobile_data_user_screen.dart';
 export 'package:pain_scale_app/widgets/wave_tap_screen.dart';
+export 'package:pain_scale_app/screens/mobile/login_mobile_screen.dart';
+export 'package:pain_scale_app/screens/mobile/register_mobile_screen.dart';
+
