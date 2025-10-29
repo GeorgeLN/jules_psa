@@ -296,16 +296,17 @@ class _ContinueButtonMState extends State<ContinueButtonM> {
         return;
       }
 
-      await storageViewModel.uploadImage(userProvider.userDocument);
+      await storageViewModel.uploadImage(userProvider.getUserDocumentId!);
 
       if (storageViewModel.imageUrl != null) {
         CollectionReference users = FirebaseFirestore.instance.collection('users');
-        users.doc(userProvider.userDocument).collection('patients').add({
+        DocumentReference patientRef = await users.doc(userProvider.getUserDocumentId).collection('patients').add({
           'name': widget.nameController.text,
           'age': widget.ageController.text,
           'image': storageViewModel.imageUrl,
         });
 
+        Provider.of<UserProvider>(context, listen: false).setPatientId(patientRef.id);
         Provider.of<UserProvider>(context, listen: false).setUser(widget.nameController.text);
         Provider.of<UserProvider>(context, listen: false).setAgeUser(widget.ageController.text);
 
