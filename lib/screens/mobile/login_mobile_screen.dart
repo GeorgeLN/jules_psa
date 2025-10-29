@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
 import 'package:pain_scale_app/screens/mobile/register_mobile_screen.dart';
+import 'package:pain_scale_app/providers/user_provider.dart';
 import 'package:pain_scale_app/screens/screens.dart';
 
 class LoginMobileScreen extends StatefulWidget {
@@ -32,6 +33,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
       );
 
       if (user != null) {
+        Provider.of<UserProvider>(context, listen: false).setUserDocumentId(user.uid);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
