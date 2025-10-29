@@ -1,28 +1,37 @@
+import 'package:app/data/models/patient_model.dart';
 
 class UserModel {
-  final String id;
-  final String name;
-  final int edad;
+  final String correo;
+  final String nombre;
+  final String documento;
+  final Map<String, PatientModel> pacientes;
 
   UserModel({
-    required this.id,
-    required this.name,
-    required this.edad,
+    required this.correo,
+    required this.nombre,
+    required this.documento,
+    required this.pacientes,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
-      name: json['name'],
-      edad: json['edad'],
+      correo: json['correo'],
+      nombre: json['nombre'],
+      documento: json['documento'],
+      pacientes: (json['pacientes'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, PatientModel.fromJson(value)),
+      ),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
-      'edad': edad,
+      'correo': correo,
+      'nombre': nombre,
+      'documento': documento,
+      'pacientes': pacientes.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      ),
     };
   }
 }
