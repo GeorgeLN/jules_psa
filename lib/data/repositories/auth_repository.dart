@@ -42,12 +42,17 @@ class AuthRepository {
           pacientes: {},
         );
 
-        await _firestore
-            .collection('usuarios')
-            .doc(document)
-            .set(userModel.toJson());
+        try {
+          await _firestore
+              .collection('usuarios')
+              .doc(document)
+              .set(userModel.toJson());
 
-        await _storage.ref().child(document).child('.placeholder').putString('');
+          await _storage.ref().child(document).child('.placeholder').putString('');
+        } catch (e) {
+          // ignore: avoid_print
+          print('Error saving user data or creating storage folder: $e');
+        }
       }
 
       return user;
