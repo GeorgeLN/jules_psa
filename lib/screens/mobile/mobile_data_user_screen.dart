@@ -300,7 +300,7 @@ class _ContinueButtonMState extends State<ContinueButtonM> {
       await storageViewModel.uploadImage(userProvider.getUserDocumentId!);
 
       if (storageViewModel.imageUrl != null) {
-        CollectionReference users = FirebaseFirestore.instance.collection('users');
+        CollectionReference users = FirebaseFirestore.instance.collection('Usuarios');
         DocumentReference patientRef = await users.doc(userProvider.getUserDocumentId).collection('patients').add({
           'name': widget.nameController.text,
           'age': widget.ageController.text,

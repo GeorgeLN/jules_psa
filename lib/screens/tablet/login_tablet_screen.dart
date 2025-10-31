@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
+import 'package:pain_scale_app/providers/user_provider.dart';
 import 'package:pain_scale_app/screens/tablet/register_tablet_screen.dart';
 import 'package:pain_scale_app/screens/screens.dart';
 
@@ -32,6 +33,8 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
       );
 
       if (user != null) {
+        Provider.of<UserProvider>(context, listen: false)
+            .setUserDocumentId(user.uid);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
