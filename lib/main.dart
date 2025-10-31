@@ -39,7 +39,7 @@ void main() async {
         providers: [
           Provider(create: (_) => AuthRepository()),
           ChangeNotifierProvider(create: ( _ ) => WaveProvider()),
-          ChangeNotifierProvider(create: ( _ ) => ImagenProvider()),
+          // ChangeNotifierProvider(create: ( _ ) => ImagenProvider()),
           ChangeNotifierProvider(create: ( _ ) => UserProvider()),
           ChangeNotifierProvider(create: ( _ ) => StorageViewModel()),
         ],

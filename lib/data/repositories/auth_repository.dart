@@ -27,8 +27,7 @@ class AuthRepository {
   Future<User?> createUserWithEmailAndPassword(
       String email, String password, String name, String document) async {
     try {
-      final UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
+      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -44,7 +43,7 @@ class AuthRepository {
         );
 
         await _firestore
-            .collection('Usuarios')
+            .collection('usuarios')
             .doc(document)
             .set(userModel.toJson());
 

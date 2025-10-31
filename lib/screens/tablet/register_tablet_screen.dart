@@ -35,7 +35,6 @@ class _RegisterTabletScreenState extends State<RegisterTabletScreen> {
         _nameController.text,
         _documentController.text,
       );
-
       if (user != null) {
         Navigator.pushReplacement(
           context,
