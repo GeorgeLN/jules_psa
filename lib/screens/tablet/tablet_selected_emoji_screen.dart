@@ -3,9 +3,11 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:pain_scale_app/data/services/storage_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
@@ -261,23 +263,46 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          onPressed: () {
-                            _capturarImagen().then((imageData) {
-                              if (imageData != null) {
-                                Provider.of<ImagenProvider>(context, listen: false).setImagen(imageData);
-                                print("Imagen capturada con éxito");
-                              } else {
-                                print("Error al capturar la imagen");
-                              }
-                            });
+                          onPressed: () async {
+                          final userProvider = Provider.of<UserProvider>(context, listen: false);
+                          final userDocumentId = userProvider.getUserDocumentId;
+                          final patientId = userProvider.getPatientId;
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TabletDataScreen(),
-                              ),
-                            );
-                          },
+                          if (userDocumentId == null || patientId == null) {
+                            print("Error: userDocumentId o patientId es nulo.");
+                            // Opcional: Mostrar un mensaje al usuario.
+                            return;
+                          }
+
+                          final imageData = await _capturarImagen();
+                          if (imageData != null) {
+                            final storageService = StorageService();
+                            final imageUrl = await storageService.uploadImage(
+                                imageData, userDocumentId, patientId);
+
+                            if (imageUrl != null) {
+                              // Guardar la URL en Firestore
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userDocumentId)
+                                  .collection('patients')
+                                  .doc(patientId)
+                                  .update({'painScaleImage': imageUrl});
+                              print("Imagen subida y URL guardada con éxito.");
+                            } else {
+                              print("Error al subir la imagen.");
+                            }
+                          } else {
+                            print("Error al capturar la imagen.");
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MobileDataScreen(),
+                            ),
+                          );
+                        },
                           icon: Icon(Icons.arrow_forward_sharp, color: Colors.black, size: width * 0.06),
                         ),
                       ),

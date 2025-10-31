@@ -295,7 +295,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                             if (imageUrl != null) {
                               // Guardar la URL en Firestore
                               await FirebaseFirestore.instance
-                                  .collection('users')
+                                  .collection('usuarios')
                                   .doc(userDocumentId)
                                   .collection('patients')
                                   .doc(patientId)
