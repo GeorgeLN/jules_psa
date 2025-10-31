@@ -11,8 +11,10 @@ class MobileDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final imagen = Provider.of<ImagenProvider>(context).imagen;
-    final userName = Provider.of<UserProvider>(context).getUser ?? 'Usuario no definido';
+    final patientPainScaleImage =
+        Provider.of<UserProvider>(context).getPatientPainScaleImage;
+    final userName =
+        Provider.of<UserProvider>(context).getUser ?? 'Usuario no definido';
     final numberPain = Provider.of<UserProvider>(context).getNumberPain ?? '';
     final firstName = userName.split(' ').first;
 
@@ -54,31 +56,29 @@ class MobileDataScreen extends StatelessWidget {
             Column(
               children: [
                 Center(
-                  child: imagen != null
-                    ? Container(
-                      width: width * 0.8,
-                      height: height * 0.65,
-                      margin: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 30,
-                            offset: Offset(0, 0),
+                  child: patientPainScaleImage != null
+                      ? Container(
+                          width: width * 0.8,
+                          height: height * 0.55,
+                          margin: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 30,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    child: Image.memory(imagen)
-                  )
-                  : Text('No image selected'),
+                          child: Image.memory(patientPainScaleImage))
+                      : const Text('No image selected'),
                 ),
-
-                imagen != null
-                  ? Container(
-                      margin: EdgeInsets.all(width * 0.03),
-                      padding: EdgeInsets.all(width * 0.03),
-                      decoration: BoxDecoration(
+                patientPainScaleImage != null
+                    ? Container(
+                        margin: EdgeInsets.all(width * 0.03),
+                        padding: EdgeInsets.all(width * 0.03),
+                        decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [

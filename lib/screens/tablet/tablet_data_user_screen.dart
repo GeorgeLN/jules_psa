@@ -3,9 +3,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
+import '../../viewmodels/storage_viewmodel.dart';
 import '../screens.dart';
 
 class TabletDataUserScreen extends StatefulWidget {
@@ -134,6 +136,28 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
                         ),
                             
                         SizedBox(height: height * 0.02),
+
+                        Consumer<StorageViewModel>(
+                          builder: (context, storageViewModel, child) {
+                            return Column(
+                              children: [
+                                if (storageViewModel.selectedImage != null)
+                                  Image.file(
+                                    storageViewModel.selectedImage!,
+                                    height: height * 0.2,
+                                  ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    storageViewModel.pickImage(ImageSource.gallery);
+                                  },
+                                  child: const Text('Seleccionar Imagen'),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+
+                        SizedBox(height: height * 0.02),
                             
                         TextFormField(
                           controller: textAgeController,
@@ -261,33 +285,40 @@ class _ContinueButtonState extends State<ContinueButton> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    final storageViewModel = Provider.of<StorageViewModel>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    Future<void> addUser() {
-      // Agregar un nuevo usuario a la colección 'users'
-      return users.add({
-        'name': widget.nameController.text,
-        'age': widget.ageController.text,
-      }).then((value) {
-        print("Usuario agregado con ID: ${value.id}");
-      }).catchError((error) {
-        print("Error al agregar usuario: $error");
-      });
+    void submit() async {
+      if (storageViewModel.selectedImage == null) {
+        // Mostrar un mensaje de error si no se ha seleccionado ninguna imagen.
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Por favor, seleccione una imagen.')),
+        );
+        return;
+      }
+
+      await storageViewModel.uploadImage(userProvider.getUserDocumentId!);
+
+      if (storageViewModel.imageUrl != null) {
+        CollectionReference users = FirebaseFirestore.instance.collection('Usuarios');
+        DocumentReference patientRef = await users.doc(userProvider.getUserDocumentId).collection('patients').add({
+          'name': widget.nameController.text,
+          'age': widget.ageController.text,
+          'image': storageViewModel.imageUrl,
+        });
+
+        Provider.of<UserProvider>(context, listen: false).setPatientId(patientRef.id);
+        Provider.of<UserProvider>(context, listen: false).setUser(widget.nameController.text);
+        Provider.of<UserProvider>(context, listen: false).setAgeUser(widget.ageController.text);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const TabletSelectedEmojiScreen(),
+          ),
+        );
+      }
     }
-
-    void submit() {
-    Provider.of<UserProvider>(context, listen: false).setUser(widget.nameController.text);
-      Provider.of<UserProvider>(context, listen: false).setAgeUser(widget.ageController.text);
-
-      addUser();
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const TabletSelectedEmojiScreen(),
-        ),
-      );
-  }
 
     return Container(
       width: widget.width * 0.9,
