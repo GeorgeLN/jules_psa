@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
-import 'package:pain_scale_app/screens/mobile/register_mobile_screen.dart';
 import 'package:pain_scale_app/providers/user_provider.dart';
 import 'package:pain_scale_app/screens/screens.dart';
 
@@ -54,7 +53,8 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('LOGIN SCREEN'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

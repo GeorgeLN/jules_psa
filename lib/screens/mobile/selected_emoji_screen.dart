@@ -9,7 +9,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/storage_service.dart';
-import '../../providers/image_provider.dart';
 import '../screens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
