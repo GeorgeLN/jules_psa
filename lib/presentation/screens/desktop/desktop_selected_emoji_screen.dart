@@ -2,7 +2,7 @@
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import '../../widgets/wave_tap_screen_desktop.dart';
+import '../../../widgets/wave_tap_screen_desktop.dart';
 
 class DesktopSelectedEmojiScreen extends StatefulWidget {
   const DesktopSelectedEmojiScreen({super.key});

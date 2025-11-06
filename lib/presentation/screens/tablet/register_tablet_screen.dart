@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
-import 'package:pain_scale_app/screens/screens.dart';
+import 'package:pain_scale_app/presentation/screens/screens.dart';
 
 class RegisterTabletScreen extends StatefulWidget {
   const RegisterTabletScreen({super.key});
@@ -14,7 +14,6 @@ class _RegisterTabletScreenState extends State<RegisterTabletScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  final _documentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -22,21 +21,19 @@ class _RegisterTabletScreenState extends State<RegisterTabletScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
-    _documentController.dispose();
     super.dispose();
   }
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final authRepository = Provider.of<AuthRepository>(context, listen: false);
-      final user = await authRepository.createUserWithEmailAndPassword(
+      final user = await authRepository.registrarUsuario(
         _emailController.text,
         _passwordController.text,
         _nameController.text,
-        _documentController.text,
       );
       if (user != null) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const ResponsiveSelectedEmojiScreen(),
@@ -74,20 +71,6 @@ class _RegisterTabletScreenState extends State<RegisterTabletScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _documentController,
-                decoration: const InputDecoration(
-                  labelText: 'Document',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your document';
                   }
                   return null;
                 },

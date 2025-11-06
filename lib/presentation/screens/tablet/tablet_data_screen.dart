@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
 
-class MobileDataScreen extends StatelessWidget {
-  const MobileDataScreen({super.key});
+class TabletDataScreen extends StatelessWidget {
+  const TabletDataScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,6 @@ class MobileDataScreen extends StatelessWidget {
     final numberPain = Provider.of<UserProvider>(context).getNumberPain ?? '';
     final firstName = userName.split(' ').first;
 
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -26,7 +25,7 @@ class MobileDataScreen extends StatelessWidget {
         title: Text(
           'Resultados',
           style: GoogleFonts.poppins(
-            fontSize: width < 800 ? width * 0.06 : width * 0.04,
+            fontSize: width < 800 ? width * 0.04 : width * 0.04,
             color: Colors.white,
           ),
         ),
@@ -76,7 +75,7 @@ class MobileDataScreen extends StatelessWidget {
                 ),
                 patientPainScaleImage != null
                     ? Container(
-                        margin: EdgeInsets.all(width * 0.03),
+                        margin: EdgeInsets.all(width * 0.008),
                         padding: EdgeInsets.all(width * 0.03),
                         decoration: BoxDecoration(
                         color: Colors.white,

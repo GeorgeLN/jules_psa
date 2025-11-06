@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../data/repositories/storage_repository.dart';
+import '../../data/repositories/storage_repository.dart';
 
 class StorageViewModel extends ChangeNotifier {
   final StorageRepository _storageRepository = StorageRepository();

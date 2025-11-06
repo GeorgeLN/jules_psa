@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pain_scale_app/providers/wave_provider.dart';
+import 'package:pain_scale_app/presentation/providers/wave_provider.dart';
 import 'package:provider/provider.dart';
 import 'wave_pulse.dart';
 import 'dart:ui' as ui;

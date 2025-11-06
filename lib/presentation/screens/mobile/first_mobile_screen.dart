@@ -47,85 +47,92 @@ class _FirstMobileScreenState extends State<FirstMobileScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Stack(
+
+      body: PopScope(
+        canPop: false,
+        
+        child: SafeArea(
+          child: Column(
             children: [
-              Container(
-                width: width,
-                height: height * 0.6,
-                child: Image.asset(
-                  'assets/images/doctor.png',
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  width: width,
-                  height: height * 0.9, // Ajusta la altura del degradado según lo que necesites
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.white,
-                      ],
-                      stops: [0.55, 0.95],
+              Stack(
+                children: [
+                  Container(
+                    width: width,
+                    height: height * 0.6,
+                    child: Image.asset(
+                      'assets/images/doctor.png',
+                      fit: BoxFit.fill,
                     ),
                   ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: width,
+                      height: height * 0.9, // Ajusta la altura del degradado según lo que necesites
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.white,
+                          ],
+                          stops: [0.55, 0.95],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          
+              Expanded(
+                child: Column(
+                  children: [
+                    Container(
+                      width: width * 0.9,
+                      color: Colors.white,
+          
+                      child: CarouselSlider(
+                        items: customOptions,
+                        options: CarouselOptions(
+                          height: height * 0.25,
+                          enableInfiniteScroll: false,
+                          viewportFraction: 1,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              currentIndex = index;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+          
+                    const SizedBox(height: 10),
+          
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: customOptions.asMap().entries.map((entry) {
+                        return Container(
+                          width: 10.0,
+                          height: 10.0,
+                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentIndex == entry.key
+                                ? Color.fromRGBO(39, 54, 114, 1)
+                                : Colors.grey[400],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-
-          Expanded(
-            child: Column(
-              children: [
-                Container(
-                  width: width * 0.9,
-                  color: Colors.white,
-
-                  child: CarouselSlider(
-                    items: customOptions,
-                    options: CarouselOptions(
-                      height: height * 0.25,
-                      enableInfiniteScroll: false,
-                      viewportFraction: 1,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          currentIndex = index;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: customOptions.asMap().entries.map((entry) {
-                    return Container(
-                      width: 10.0,
-                      height: 10.0,
-                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: currentIndex == entry.key
-                            ? Color.fromRGBO(39, 54, 114, 1)
-                            : Colors.grey[400],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -164,8 +171,7 @@ class _FirstMobileScreenState extends State<FirstMobileScreen> {
             fontSize: width * 0.04,
             fontWeight: FontWeight.w400,
           ),
-        ),
-        // SizedBox(height: height * 0.02),
+        ),// SizedBox(height: height * 0.02),
       ],
     );
   }
@@ -216,7 +222,7 @@ class _FirstMobileScreenState extends State<FirstMobileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MobileDataUserScreen(),
+                  builder: (context) => const TermsConditionsMobileScreen(),
                 ),
               );
             },

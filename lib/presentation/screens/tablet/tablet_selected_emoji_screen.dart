@@ -11,7 +11,7 @@ import 'package:pain_scale_app/data/services/storage_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
-import '../../widgets/wave_tap_screen_tablet.dart';
+import '../../../widgets/wave_tap_screen_tablet.dart';
 import '../screens.dart';
 
 class TabletSelectedEmojiScreen extends StatefulWidget {

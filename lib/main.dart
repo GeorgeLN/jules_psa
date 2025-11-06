@@ -3,11 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options.dart';
-import 'screens/screens.dart';
+import 'presentation/screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
-import 'package:pain_scale_app/providers/providers.dart';
-import 'package:pain_scale_app/viewmodels/storage_viewmodel.dart';
+import 'package:pain_scale_app/presentation/providers/providers.dart';
+import 'package:pain_scale_app/presentation/viewmodels/storage_view_model.dart';
 
 void main() async {
   //Configuración inicial de Firebase para que no de errores.
@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Escala de Dolor - App',
-        home: const LoginMobileScreen(),
+        home: MainScreen(),
       ),
     );
   }

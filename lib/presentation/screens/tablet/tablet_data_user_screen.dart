@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
-import '../../viewmodels/storage_viewmodel.dart';
+import '../../viewmodels/storage_view_model.dart';
 import '../screens.dart';
 
 class TabletDataUserScreen extends StatefulWidget {

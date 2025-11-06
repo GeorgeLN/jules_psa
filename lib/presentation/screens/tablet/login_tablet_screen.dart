@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
-import 'package:pain_scale_app/providers/user_provider.dart';
-import 'package:pain_scale_app/screens/tablet/register_tablet_screen.dart';
-import 'package:pain_scale_app/screens/screens.dart';
+import 'package:pain_scale_app/presentation/providers/user_provider.dart';
+import 'package:pain_scale_app/presentation/screens/tablet/register_tablet_screen.dart';
+import 'package:pain_scale_app/presentation/screens/screens.dart';
 
 class LoginTabletScreen extends StatefulWidget {
   const LoginTabletScreen({super.key});
@@ -35,7 +35,7 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
       if (user != null) {
         Provider.of<UserProvider>(context, listen: false)
             .setUserDocumentId(user.uid);
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const ResponsiveSelectedEmojiScreen(),
