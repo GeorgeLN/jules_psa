@@ -43,18 +43,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
   }
 
   Future<void> _saveUserData() async {
-    if (formKey.currentState!.validate()) {
-      final storageViewModel = Provider.of<StorageViewModel>(context, listen: false);
-      final String name = textNameController.text.trim();
-      final int age = int.parse(textAgeController.text.trim());
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const OptionsMobileScreen(),
-        ),
-      );
-    }
+    
   }
 
   @override
@@ -203,7 +192,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                   
                           child: ElevatedButton(
                             onPressed: () {
-                  
+                              _saveUserData();
                             },
                   
                             style: ElevatedButton.styleFrom(
