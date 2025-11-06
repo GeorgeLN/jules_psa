@@ -26,8 +26,20 @@ class UserRepository {
   }
 
   // PACIENTES
-  Future<void> addPatient(PatientModel patientData) async {
-    await _patientsCollection.add(patientData.toJson());
+  Future<String> addPatientAndGetId(PatientModel patientData) async {
+    final docRef = await _patientsCollection.add(patientData.toJson());
+    return docRef.id;
+  }
+
+  Future<void> addPatientToUser(String userDocumentId, PatientModel patient) async {
+    final userDocRef = _usersCollection.doc(userDocumentId);
+    final userDoc = await userDocRef.get();
+    final userData = userDoc.data() as Map<String, dynamic>;
+    final user = UserModel.fromJson(userData);
+
+    user.pacientes.add(patient);
+
+    await userDocRef.update(user.toJson());
   }
 
   Future<List<PatientModel>> fetchPatients() async {
