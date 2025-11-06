@@ -7,6 +7,7 @@ import 'package:pain_scale_app/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
+import '../../viewmodels/patient_view_model.dart';
 import '../../viewmodels/storage_view_model.dart';
 import '../screens.dart';
 
@@ -38,12 +39,55 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
 
   void _validateForm() {
     setState(() {
-      isbuttonEnabledM = textNameController.text.isNotEmpty && textAgeController.text.isNotEmpty;
+      // isbuttonEnabledM = textNameController.text.isNotEmpty && textAgeController.text.isNotEmpty;
     });
   }
 
   Future<void> _saveUserData() async {
-    
+    if (formKey.currentState!.validate()) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(child: CircularProgressIndicator());
+        },
+      );
+
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final patientViewModel = PatientViewModel();
+
+      final userDocumentId = userProvider.getUserDocumentId;
+      final patientName = textNameController.text;
+      final patientAge = textAgeController.text;
+
+      if (userDocumentId != null) {
+        final success = await patientViewModel.addPatient(
+          userDocumentId: userDocumentId,
+          patientName: patientName,
+          patientAge: patientAge,
+        );
+
+        Navigator.of(context).pop();
+
+        if (success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResponsiveSelectedEmojiScreen(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error al guardar los datos del paciente')),
+          );
+        }
+      } else {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: No se ha encontrado el usuario')),
+        );
+      }
+    }
   }
 
   @override
