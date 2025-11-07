@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
+import 'dart.io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pain_scale_app/data/models/patient_model.dart';
+import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +17,8 @@ import '../../viewmodels/storage_view_model.dart';
 import '../screens.dart';
 
 class MobileDataUserScreen extends StatefulWidget {
-  const MobileDataUserScreen({super.key});
+  final PatientModel? patient;
+  const MobileDataUserScreen({super.key, this.patient});
 
   @override
   State<MobileDataUserScreen> createState() => _MobileDataUserScreenState();
@@ -22,10 +28,17 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController textNameController = TextEditingController();
   final TextEditingController textAgeController = TextEditingController();
+  Uint8List? _imageFile;
+
+  bool get isEditing => widget.patient != null;
 
   @override
   void initState() {
     super.initState();
+    if (isEditing) {
+      textNameController.text = widget.patient!.nombre;
+      textAgeController.text = widget.patient!.edad;
+    }
     textNameController.addListener(_validateForm);
     textAgeController.addListener(_validateForm);
   }
@@ -43,49 +56,76 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
     });
   }
 
-  Future<void> _saveUserData() async {
+  Future<void> _savePatientData() async {
     if (formKey.currentState!.validate()) {
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       );
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final patientViewModel = PatientViewModel();
 
-      final userDocumentId = userProvider.getUid;
+      final userDocumentId = userProvider.getUserDocumentId;
       final patientName = textNameController.text;
       final patientAge = textAgeController.text;
 
       if (userDocumentId != null) {
-        final patientId = await patientViewModel.addPatient(
-          userDocumentId: userDocumentId,
-          patientName: patientName,
-          patientAge: patientAge,
-        );
-
-        Navigator.of(context).pop();
-
-        if (patientId != null) {
-          userProvider.setPatientId(patientId);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SelectedEmojiScreen(),
-            ),
+        if (isEditing) {
+          final success = await patientViewModel.updatePatient(
+            userDocumentId: userDocumentId,
+            patientId: widget.patient!.uid,
+            newName: patientName,
+            newAge: patientAge,
+            newImage: _imageFile,
           );
+
+          Navigator.of(context).pop();
+
+          if (success) {
+            final userModel =
+                await UserRepository().getUser(userProvider.getUserDocumentId!);
+            if (userModel != null) {
+              userProvider.setUserModel(userModel);
+            }
+            Navigator.pop(context);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Error al actualizar los datos del paciente')),
+            );
+          }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error al guardar los datos del paciente')),
+          final patientId = await patientViewModel.addPatient(
+            userDocumentId: userDocumentId,
+            patientName: patientName,
+            patientAge: patientAge,
           );
+
+          Navigator.of(context).pop();
+
+          if (patientId != null) {
+            userProvider.setPatientId(patientId);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SelectedEmojiScreen(),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Error al guardar los datos del paciente')),
+            );
+          }
         }
       } else {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: No se ha encontrado el usuario')),
+          const SnackBar(content: Text('Error: No se ha encontrado el usuario')),
         );
       }
     }
@@ -131,19 +171,51 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                         ),
                   
                         Padding(
-                          padding: EdgeInsets.only(left: width * 0.05, right: width * 0.05, bottom: height * 0.03),
-                  
+                          padding: EdgeInsets.only(
+                              left: width * 0.05,
+                              right: width * 0.05,
+                              bottom: height * 0.03),
                           child: Text(
-                            'Ingrese los datos del paciente',
+                            isEditing
+                                ? 'Modificar datos del paciente'
+                                : 'Ingrese los datos del paciente',
                             style: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.05 : width * 0.0325,
+                              fontSize:
+                                  width < 800 ? width * 0.05 : width * 0.0325,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                            
+                        if (isEditing) ...[
+                          Consumer<UserProvider>(
+                            builder: (context, userProvider, child) {
+                              _imageFile = userProvider.getPatientPainScaleImage;
+                              return CircleAvatar(
+                                radius: 50,
+                                backgroundImage: _imageFile != null
+                                    ? MemoryImage(_imageFile!)
+                                    : NetworkImage(widget.patient!.imagen)
+                                        as ImageProvider,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SelectedEmojiScreen(
+                                    isChanging: true,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text('Cambiar imagen'),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                         TextFormField(
                           controller: textNameController,
                           keyboardType: TextInputType.text,
@@ -234,23 +306,24 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                             
                         Container(
                           width: width * 0.9,
-                  
                           child: ElevatedButton(
                             onPressed: () {
-                              _saveUserData();
+                              _savePatientData();
                             },
-                  
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromRGBO(39, 54, 114, 1),
+                              backgroundColor:
+                                  const Color.fromRGBO(39, 54, 114, 1),
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                  
                             child: Text(
-                              'Guardar y Continuar',
+                              isEditing
+                                  ? 'Guardar Cambios'
+                                  : 'Guardar y Continuar',
                               style: TextStyle(
                                 fontSize: width * 0.045,
                                 fontWeight: FontWeight.bold,
