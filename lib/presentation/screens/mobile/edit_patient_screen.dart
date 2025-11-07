@@ -1,7 +1,6 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
@@ -21,18 +20,7 @@ class _EditPatientScreenState extends State<EditPatientScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _ageController;
-  File? _imageFile;
-
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
+  Uint8List? _imageFile;
 
   @override
   void initState() {
@@ -61,15 +49,28 @@ class _EditPatientScreenState extends State<EditPatientScreen> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: _imageFile != null
-                    ? FileImage(_imageFile!)
-                    : NetworkImage(widget.patient.imagen) as ImageProvider,
+              Consumer<UserProvider>(
+                builder: (context, userProvider, child) {
+                  _imageFile = userProvider.getPatientPainScaleImage;
+                  return CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _imageFile != null
+                        ? MemoryImage(_imageFile!)
+                        : NetworkImage(widget.patient.imagen) as ImageProvider,
+                  );
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _pickImage,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SelectedEmojiScreen(
+                        isChanging: true,
+                      ),
+                    ),
+                  );
+                },
                 child: const Text('Cambiar imagen'),
               ),
               const SizedBox(height: 20),

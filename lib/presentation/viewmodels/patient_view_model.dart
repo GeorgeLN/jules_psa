@@ -1,5 +1,5 @@
 
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
@@ -136,7 +136,7 @@ class PatientViewModel extends ChangeNotifier {
     required String patientId,
     required String newName,
     required String newAge,
-    File? newImage,
+    Uint8List? newImage,
   }) async {
     try {
       _setState(ViewState.loading);
@@ -150,7 +150,8 @@ class PatientViewModel extends ChangeNotifier {
       String? imageUrl;
       if (newImage != null) {
         final storageRepository = StorageRepository();
-        imageUrl = await storageRepository.uploadImage(newImage, userDocumentId);
+        imageUrl = await storageRepository.uploadPatientImageData(
+            newImage, userDocumentId, patientId);
         if (imageUrl != null) {
           await storageRepository.deletePatientImage(patient.imagen);
         }
