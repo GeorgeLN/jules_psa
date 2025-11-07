@@ -6,9 +6,8 @@ import 'package:pain_scale_app/presentation/screens/screens.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
-   
   const MainScreen({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +20,9 @@ class MainScreen extends StatelessWidget {
 
           if (snapshot.hasData) {
             final user = snapshot.data!;
-            Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+            });
             return const ResponsiveSelectedEmojiScreen();
           } else {
             return const EmailVerificationMobileScreen();

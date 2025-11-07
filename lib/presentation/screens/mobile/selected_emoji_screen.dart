@@ -282,20 +282,20 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                               final userProvider = Provider.of<UserProvider>(context, listen: false);
                               final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
 
-                              final userDocumentId = userProvider.getUid;
+                              final userId = userProvider.getUid;
                               final patientId = userProvider.getPatientId;
 
-                              if (userDocumentId != null && patientId != null) {
+                              if (userId != null && patientId != null) {
                                 final imageBytes = await _capturarImagen();
 
                                 if (imageBytes != null) {
                                   userProvider.setPatientPainScaleImage(imageBytes);
 
-                                  final imageUrl = await StorageService().uploadImage(imageBytes, userDocumentId, patientId);
+                                  final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
                                   if (imageUrl != null) {
                                     await patientViewModel.updatePatientImage(
-                                      userDocumentId: userDocumentId,
+                                      userDocumentId: userId,
                                       patientId: patientId,
                                       imageUrl: imageUrl,
                                     );
