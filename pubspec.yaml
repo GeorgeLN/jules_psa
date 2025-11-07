@@ -38,6 +38,7 @@ dependencies:
   firebase_storage: ^12.4.10
   flutter:
     sdk: flutter
+  flutter_slidable: ^4.0.3
   google_fonts: ^6.2.1
   image_picker: ^1.2.0
   lottie: ^3.3.1
