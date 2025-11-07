@@ -136,6 +136,28 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
                         ),
                             
                         SizedBox(height: height * 0.02),
+
+                        Consumer<StorageViewModel>(
+                          builder: (context, storageViewModel, child) {
+                            return Column(
+                              children: [
+                                if (storageViewModel.selectedImage != null)
+                                  Image.file(
+                                    storageViewModel.selectedImage!,
+                                    height: height * 0.2,
+                                  ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    storageViewModel.pickImage(ImageSource.gallery);
+                                  },
+                                  child: const Text('Seleccionar Imagen'),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+
+                        SizedBox(height: height * 0.02),
                             
                         TextFormField(
                           controller: textAgeController,
@@ -265,9 +287,17 @@ class _ContinueButtonState extends State<ContinueButton> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final storageViewModel =
+        Provider.of<StorageViewModel>(context, listen: false);
 
     void submit(UserProvider userProvider) async {
-      final patientViewModel = PatientViewModel();
+      if (storageViewModel.selectedImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Por favor, seleccione una imagen.')),
+        );
+        return;
+      }
+
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -281,26 +311,42 @@ class _ContinueButtonState extends State<ContinueButton> {
       final patientAge = widget.ageController.text;
 
       if (userDocumentId != null) {
-        final patientId = await patientViewModel.addPatient(
-          userDocumentId: userDocumentId,
-          patientName: patientName,
-          patientAge: patientAge,
-        );
+        final imageUrl = await storageViewModel.uploadImage(userDocumentId);
 
-        Navigator.of(context).pop();
-
-        if (patientId != null) {
-          userProvider.setPatientId(patientId);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TabletSelectedEmojiScreen(),
-            ),
+        if (imageUrl != null) {
+          final patientViewModel = PatientViewModel();
+          final patientId = await patientViewModel.addPatient(
+            userDocumentId: userDocumentId,
+            patientName: patientName,
+            patientAge: patientAge,
           );
+
+          if (patientId != null) {
+            await patientViewModel.updatePatientImage(
+              userDocumentId: userDocumentId,
+              patientId: patientId,
+              imageUrl: imageUrl,
+            );
+
+            userProvider.setPatientId(patientId);
+            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TabletSelectedEmojiScreen(),
+              ),
+            );
+          } else {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Error al guardar los datos del paciente')),
+            );
+          }
         } else {
+          Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Error al guardar los datos del paciente')),
+            const SnackBar(content: Text('Error al subir la imagen')),
           );
         }
       } else {

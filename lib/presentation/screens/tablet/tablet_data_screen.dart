@@ -14,7 +14,7 @@ class TabletDataScreen extends StatelessWidget {
     final patientPainScaleImage =
         Provider.of<UserProvider>(context).getPatientPainScaleImage;
     final userName =
-        Provider.of<UserProvider>(context).getUser ?? 'Usuario no definido';
+        Provider.of<UserProvider>(context).getUserModel?.nombre ?? 'Usuario no definido';
     final numberPain = Provider.of<UserProvider>(context).getNumberPain ?? '';
     final firstName = userName.split(' ').first;
 

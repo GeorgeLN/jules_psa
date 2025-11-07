@@ -12,7 +12,7 @@ class MobileDataScreen extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final patientPainScaleImage = Provider.of<UserProvider>(context).getPatientPainScaleImage;
-    final userName = Provider.of<UserProvider>(context).getUser ?? 'Usuario no definido';
+    final userName = Provider.of<UserProvider>(context).getUserModel?.nombre ?? 'Usuario no definido';
     final numberPain = Provider.of<UserProvider>(context).getNumberPain ?? '';
     final firstName = userName.split(' ').first;
 

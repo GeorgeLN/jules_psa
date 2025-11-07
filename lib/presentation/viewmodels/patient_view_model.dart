@@ -139,7 +139,6 @@ class PatientViewModel extends ChangeNotifier {
     try {
       _setState(ViewState.loading);
 
-      // Get the current patient data
       final patient = await _userRepository.getPatient(patientId);
       if (patient == null) {
         _setState(ViewState.error);
@@ -184,31 +183,7 @@ class PatientViewModel extends ChangeNotifier {
       return false;
     }
   }
-
-  Future<bool> updatePatient({
-    required String userDocumentId,
-    required String patientId,
-    required String newName,
-    required String newAge,
-    File? newImage,
-  }) async {
-    try {
-      _setState(ViewState.loading);
-
-      String? imageUrl;
-      if (newImage != null) {
-        final storageRepository = StorageRepository();
-        imageUrl = await storageRepository.uploadImage(newImage, userDocumentId);
-        if (imageUrl != null) {
-          final oldImageUrl = (await _userRepository.getPatient(patientId))?.imagen;
-          if (oldImageUrl != null) {
-            await storageRepository.deletePatientImage(oldImageUrl);
-          }
-        }
-      }
-
-      // Get the current patient data
-      final patient = await _userRepository.getPatient(patientId);
+}
       if (patient == null) {
         _setState(ViewState.error);
         return false;
