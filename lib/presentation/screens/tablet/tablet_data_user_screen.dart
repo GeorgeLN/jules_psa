@@ -1,18 +1,24 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package.pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
 import '../../viewmodels/storage_view_model.dart';
+import 'package:pain_scale_app/data/models/patient_model.dart';
+
 import '../screens.dart';
 
 class TabletDataUserScreen extends StatefulWidget {
-  const TabletDataUserScreen({super.key});
+  final PatientModel? patient;
+  const TabletDataUserScreen({super.key, this.patient});
 
   @override
   State<TabletDataUserScreen> createState() => _TabletDataUserScreenState();
@@ -26,10 +32,17 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController textNameController = TextEditingController();
   final TextEditingController textAgeController = TextEditingController();
+  Uint8List? _imageFile;
+
+  bool get isEditing => widget.patient != null;
 
   @override
   void initState() {
     super.initState();
+    if (isEditing) {
+      textNameController.text = widget.patient!.nombre;
+      textAgeController.text = widget.patient!.edad;
+    }
     textNameController.addListener(_validateForm);
     textAgeController.addListener(_validateForm);
   }
@@ -84,16 +97,46 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
                         Padding(
                           padding: EdgeInsets.all(width * 0.05),
                           child: Text(
-                            'Ingrese los siguientes datos y acepte las recomendaciones para continuar.',
+                            isEditing
+                                ? 'Modificar datos del paciente'
+                                : 'Ingrese los siguientes datos y acepte las recomendaciones para continuar.',
                             style: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                              fontSize:
+                                  width < 800 ? width * 0.04 : width * 0.0325,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                            
+                        if (isEditing) ...[
+                          Consumer<UserProvider>(
+                            builder: (context, userProvider, child) {
+                              _imageFile = userProvider.getPatientPainScaleImage;
+                              return CircleAvatar(
+                                radius: 50,
+                                backgroundImage: _imageFile != null
+                                    ? MemoryImage(_imageFile!)
+                                    : NetworkImage(widget.patient!.imagen)
+                                        as ImageProvider,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SelectedEmojiScreen(
+                                    isChanging: true,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text('Cambiar imagen'),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                         TextFormField(
                           controller: textNameController,
                           keyboardType: TextInputType.text,
@@ -250,9 +293,15 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
                           ],
                         ),
                             
-                        SizedBox(height: height * 0.03), 
-                            
-                        ContinueButton(width: width, nameController: textNameController, ageController: textAgeController),
+                        SizedBox(height: height * 0.03),
+                        ContinueButton(
+                          width: width,
+                          nameController: textNameController,
+                          ageController: textAgeController,
+                          patient: widget.patient,
+                          isEditing: isEditing,
+                          imageFile: _imageFile,
+                        ),
                       ],
                     ),
                   ),
@@ -267,16 +316,21 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
 }
 
 class ContinueButton extends StatefulWidget {
-  ContinueButton({
-    super.key,
-    required this.width,
-    required this.nameController,
-    required this.ageController,
-  });
+  ContinueButton(
+      {super.key,
+      required this.width,
+      required this.nameController,
+      required this.ageController,
+      this.patient,
+      required this.isEditing,
+      this.imageFile});
 
   final double width;
   final TextEditingController nameController;
   final TextEditingController ageController;
+  final PatientModel? patient;
+  final bool isEditing;
+  final Uint8List? imageFile;
 
   @override
   State<ContinueButton> createState() => _ContinueButtonState();
@@ -290,13 +344,6 @@ class _ContinueButtonState extends State<ContinueButton> {
         Provider.of<StorageViewModel>(context, listen: false);
 
     void submit(UserProvider userProvider) async {
-      if (storageViewModel.selectedImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor, seleccione una imagen.')),
-        );
-        return;
-      }
-
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -305,50 +352,82 @@ class _ContinueButtonState extends State<ContinueButton> {
         },
       );
 
-      final userDocumentId = userProvider.getUid;
+      final patientViewModel = PatientViewModel();
+      final userDocumentId = userProvider.getUserDocumentId;
       final patientName = widget.nameController.text;
       final patientAge = widget.ageController.text;
 
       if (userDocumentId != null) {
-        // uploadImage currently returns void; await the upload and then read the URL from the view model.
-        await storageViewModel.uploadImage(userDocumentId);
-        final imageUrl = storageViewModel.imageUrl;
-
-        if (imageUrl != null) {
-          final patientViewModel = PatientViewModel();
-          final patientId = await patientViewModel.addPatient(
+        if (widget.isEditing) {
+          final success = await patientViewModel.updatePatient(
             userDocumentId: userDocumentId,
-            patientName: patientName,
-            patientAge: patientAge,
+            patientId: widget.patient!.uid,
+            newName: patientName,
+            newAge: patientAge,
+            newImage: widget.imageFile,
           );
 
-          if (patientId != null) {
-            await patientViewModel.updatePatientImage(
-              userDocumentId: userDocumentId,
-              patientId: patientId,
-              imageUrl: imageUrl,
-            );
+          Navigator.of(context).pop();
 
-            userProvider.setPatientId(patientId);
-            Navigator.of(context).pop();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const TabletSelectedEmojiScreen(),
-              ),
-            );
+          if (success) {
+            final userModel =
+                await UserRepository().getUser(userProvider.getUserDocumentId!);
+            if (userModel != null) {
+              userProvider.setUserModel(userModel);
+            }
+            Navigator.pop(context);
           } else {
-            Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Text('Error al guardar los datos del paciente')),
+                  content: Text('Error al actualizar los datos del paciente')),
             );
           }
         } else {
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error al subir la imagen')),
-          );
+          if (storageViewModel.selectedImage == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Por favor, seleccione una imagen.')),
+            );
+            return;
+          }
+
+          await storageViewModel.uploadImage(userDocumentId);
+          final imageUrl = storageViewModel.imageUrl;
+
+          if (imageUrl != null) {
+            final patientId = await patientViewModel.addPatient(
+              userDocumentId: userDocumentId,
+              patientName: patientName,
+              patientAge: patientAge,
+            );
+
+            if (patientId != null) {
+              await patientViewModel.updatePatientImage(
+                userDocumentId: userDocumentId,
+                patientId: patientId,
+                imageUrl: imageUrl,
+              );
+
+              userProvider.setPatientId(patientId);
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TabletSelectedEmojiScreen(),
+                ),
+              );
+            } else {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Error al guardar los datos del paciente')),
+              );
+            }
+          } else {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error al subir la imagen')),
+            );
+          }
         }
       } else {
         Navigator.of(context).pop();
@@ -376,7 +455,7 @@ class _ContinueButtonState extends State<ContinueButton> {
           ),
         ),
         child: Text(
-          'Continuar',
+          widget.isEditing ? 'Guardar Cambios' : 'Continuar',
           style: TextStyle(
             fontSize: widget.width * 0.045,
             fontWeight: FontWeight.bold,
