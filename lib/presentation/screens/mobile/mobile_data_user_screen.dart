@@ -61,7 +61,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
       final patientAge = textAgeController.text;
 
       if (userDocumentId != null) {
-        final success = await patientViewModel.addPatient(
+        final patientId = await patientViewModel.addPatient(
           userDocumentId: userDocumentId,
           patientName: patientName,
           patientAge: patientAge,
@@ -69,7 +69,8 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
 
         Navigator.of(context).pop();
 
-        if (success) {
+        if (patientId != null) {
+          userProvider.setPatientId(patientId);
           Navigator.push(
             context,
             MaterialPageRoute(
