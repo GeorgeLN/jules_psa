@@ -54,4 +54,52 @@ class PatientViewModel extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> updatePatientImage({
+    required String userDocumentId,
+    required String patientId,
+    required String imageUrl,
+  }) async {
+    try {
+      _setState(ViewState.loading);
+
+      // Obtener el paciente
+      PatientModel? patient = await _userRepository.getPatient(patientId);
+
+      if (patient != null) {
+        // Actualizar la URL de la imagen
+        PatientModel updatedPatient = PatientModel(
+          uid: patient.uid,
+          nombre: patient.nombre,
+          edad: patient.edad,
+          imagen: imageUrl,
+        );
+
+        // Actualizar el paciente en la colección de pacientes
+        await _userRepository.updatePatient(updatedPatient);
+
+        // Actualizar el paciente en la lista de pacientes del usuario
+        UserModel? user = await _userRepository.getUser(userDocumentId);
+
+        if (user != null) {
+          // Encontrar el paciente en la lista y actualizarlo
+          for (int i = 0; i < user.pacientes.length; i++) {
+            if (user.pacientes[i].uid == patientId) {
+              user.pacientes[i] = updatedPatient;
+              break;
+            }
+          }
+
+          // Actualizar el usuario
+          await _userRepository.updateUser(user);
+        }
+      }
+
+      _setState(ViewState.success);
+      return true;
+    } catch (e) {
+      _setState(ViewState.error);
+      return false;
+    }
+  }
 }

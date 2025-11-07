@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../data/services/storage_service.dart';
 import '../screens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../viewmodels/patient_view_model.dart';
 
 class SelectedEmojiScreen extends StatefulWidget {
   const SelectedEmojiScreen({super.key});
@@ -277,7 +278,36 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                         ),
                         child: IconButton(
                           onPressed: () async {
-                            // AQUI se captura la imagen.
+                            final userProvider = Provider.of<UserProvider>(context, listen: false);
+                            final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+
+                            final userDocumentId = userProvider.getUserDocumentId;
+                            final patientId = userProvider.getPatientId;
+
+                            if (userDocumentId != null && patientId != null) {
+                              final imageBytes = await _capturarImagen();
+
+                              if (imageBytes != null) {
+                                userProvider.setPatientPainScaleImage(imageBytes);
+
+                                final imageUrl = await StorageService().uploadImage(imageBytes, userDocumentId, patientId);
+
+                                if (imageUrl != null) {
+                                  await patientViewModel.updatePatientImage(
+                                    userDocumentId: userDocumentId,
+                                    patientId: patientId,
+                                    imageUrl: imageUrl,
+                                  );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const MobileDataScreen(),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
                           },
                           icon: Icon(Icons.arrow_forward_sharp, color: Colors.black, size: width * 0.06),
                         ),

@@ -25,6 +25,17 @@ class UserRepository {
     await _usersCollection.doc(id).delete();
   }
 
+  Future<UserModel?> getUser(String userDocumentId) async {
+    final userDocRef = _usersCollection.doc(userDocumentId);
+    final userDoc = await userDocRef.get();
+
+    if (userDoc.exists) {
+      return UserModel.fromSnapshot(userDoc);
+    } else {
+      return null;
+    }
+  }
+
   // PACIENTES
   Future<String> addPatientAndGetId(PatientModel patientData) async {
     final docRef = await _patientsCollection.add(patientData.toJson());
@@ -53,5 +64,16 @@ class UserRepository {
 
   Future<void> deletePatient(String id) async {
     await _patientsCollection.doc(id).delete();
+  }
+
+  Future<PatientModel?> getPatient(String patientId) async {
+    final patientDocRef = _patientsCollection.doc(patientId);
+    final patientDoc = await patientDocRef.get();
+
+    if (patientDoc.exists) {
+      return PatientModel.fromSnapshot(patientDoc);
+    } else {
+      return null;
+    }
   }
 }
