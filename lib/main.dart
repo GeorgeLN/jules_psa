@@ -2,6 +2,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'firebase_options.dart';
 import 'presentation/screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,7 @@ void main() async {
           // ChangeNotifierProvider(create: ( _ ) => ImagenProvider()),
           ChangeNotifierProvider(create: ( _ ) => UserProvider()),
           ChangeNotifierProvider(create: ( _ ) => StorageViewModel()),
+          ChangeNotifierProvider(create: ( _ ) => PatientViewModel()),
         ],
         child: const MyApp(),
     ),

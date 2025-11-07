@@ -8,7 +8,6 @@ class UserProvider with ChangeNotifier {
   String? _user;
   String? _ageUser;
   String? _numberPain;
-  String? _userDocumentId;
   String? _patientUid;
   Uint8List? _patientPainScaleImage;
 
@@ -16,7 +15,6 @@ class UserProvider with ChangeNotifier {
   String? get getUser => _user;
   String? get getAgeUser => _ageUser;
   String? get getNumberPain => _numberPain;
-  String? get getUserDocumentId => _userDocumentId;
   String? get getPatientId => _patientUid;
   Uint8List? get getPatientPainScaleImage => _patientPainScaleImage;
 
@@ -32,11 +30,6 @@ class UserProvider with ChangeNotifier {
 
   void setUser(String user) {
     _user = user;
-    notifyListeners();
-  }
-
-  void setUserDocumentId(String userDocumentId) {
-    _userDocumentId = userDocumentId;
     notifyListeners();
   }
 

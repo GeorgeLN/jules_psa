@@ -243,7 +243,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                         Container(
                           padding: EdgeInsets.all(width * 0.05),
                           margin: EdgeInsets.only(right: width * 0.2),
-                          child: WaveTapScreen(key: _screenshotKey),
+                          child: WaveTapScreen(captureKey: _screenshotKey),
                         ),
                       ],
                     ),
@@ -278,35 +278,39 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                         ),
                         child: IconButton(
                           onPressed: () async {
-                            final userProvider = Provider.of<UserProvider>(context, listen: false);
-                            final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+                            try {
+                              final userProvider = Provider.of<UserProvider>(context, listen: false);
+                              final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
 
-                            final userDocumentId = userProvider.getUserDocumentId;
-                            final patientId = userProvider.getPatientId;
+                              final userDocumentId = userProvider.getUid;
+                              final patientId = userProvider.getPatientId;
 
-                            if (userDocumentId != null && patientId != null) {
-                              final imageBytes = await _capturarImagen();
+                              if (userDocumentId != null && patientId != null) {
+                                final imageBytes = await _capturarImagen();
 
-                              if (imageBytes != null) {
-                                userProvider.setPatientPainScaleImage(imageBytes);
+                                if (imageBytes != null) {
+                                  userProvider.setPatientPainScaleImage(imageBytes);
 
-                                final imageUrl = await StorageService().uploadImage(imageBytes, userDocumentId, patientId);
+                                  final imageUrl = await StorageService().uploadImage(imageBytes, userDocumentId, patientId);
 
-                                if (imageUrl != null) {
-                                  await patientViewModel.updatePatientImage(
-                                    userDocumentId: userDocumentId,
-                                    patientId: patientId,
-                                    imageUrl: imageUrl,
-                                  );
+                                  if (imageUrl != null) {
+                                    await patientViewModel.updatePatientImage(
+                                      userDocumentId: userDocumentId,
+                                      patientId: patientId,
+                                      imageUrl: imageUrl,
+                                    );
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const MobileDataScreen(),
-                                    ),
-                                  );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MobileDataScreen(),
+                                      ),
+                                    );
+                                  }
                                 }
                               }
+                            } catch (e) {
+                              print("Error al guardar la imagen y navegar: $e");
                             }
                           },
                           icon: Icon(Icons.arrow_forward_sharp, color: Colors.black, size: width * 0.06),

@@ -33,8 +33,7 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
       );
 
       if (user != null) {
-        Provider.of<UserProvider>(context, listen: false)
-            .setUserDocumentId(user.uid);
+        Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
         Navigator.push(
           context,
           MaterialPageRoute(

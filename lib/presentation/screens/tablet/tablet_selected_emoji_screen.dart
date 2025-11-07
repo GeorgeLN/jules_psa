@@ -265,7 +265,7 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                         child: IconButton(
                           onPressed: () async {
                           final userProvider = Provider.of<UserProvider>(context, listen: false);
-                          final userDocumentId = userProvider.getUserDocumentId;
+                          final userDocumentId = userProvider.getUid;
                           final patientId = userProvider.getPatientId;
 
                           if (userDocumentId == null || patientId == null) {

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
+import 'package:pain_scale_app/data/models/user_model.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 
 enum ViewState { idle, loading, success, error }
@@ -24,7 +25,6 @@ class PatientViewModel extends ChangeNotifier {
     try {
       _setState(ViewState.loading);
 
-      // Create a new patient
       PatientModel newPatient = PatientModel(
         uid: '', // Firestore will generate this
         nombre: patientName,

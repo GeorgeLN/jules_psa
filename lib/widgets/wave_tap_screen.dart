@@ -8,7 +8,9 @@ import 'wave_pulse.dart';
 import 'dart:ui' as ui;
 
 class WaveTapScreen extends StatefulWidget {
-  const WaveTapScreen({Key? key}) : super(key: key);
+  const WaveTapScreen({super.key, required this.captureKey});
+
+  final GlobalKey captureKey; // Key exclusiva para el RepaintBoundary
 
   @override
   State<WaveTapScreen> createState() => _WaveTapScreenState();
@@ -101,7 +103,7 @@ class _WaveTapScreenState extends State<WaveTapScreen> {
     return Stack(
       children: [
         RepaintBoundary(
-          key: super.widget.key,
+          key: widget.captureKey,
           child: GestureDetector(
             onTapDown: (details) {
               _onTapDown(details, context, _imageKey);
