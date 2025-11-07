@@ -27,6 +27,7 @@ class StorageRepository {
     } catch (e) {
       // ignore: avoid_print
       print('Error al eliminar la imagen: $e');
+      rethrow;
     }
   }
 }
