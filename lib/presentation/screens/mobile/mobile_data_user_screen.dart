@@ -56,7 +56,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final patientViewModel = PatientViewModel();
 
-      final userDocumentId = userProvider.getUserDocumentId;
+      final userDocumentId = userProvider.getUid;
       final patientName = textNameController.text;
       final patientAge = textAgeController.text;
 
@@ -73,7 +73,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ResponsiveSelectedEmojiScreen(),
+              builder: (context) => SelectedEmojiScreen(),
             ),
           );
         } else {

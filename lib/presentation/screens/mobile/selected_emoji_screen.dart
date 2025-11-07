@@ -111,7 +111,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
 
     return Scaffold(
       body: PopScope(
-        canPop: false,
+        canPop: true,
 
         child: SafeArea(
           child: Stack(
@@ -277,44 +277,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                         ),
                         child: IconButton(
                           onPressed: () async {
-                            final userProvider = Provider.of<UserProvider>(context, listen: false);
-                            final userDocumentId = userProvider.getUserDocumentId;
-                            final patientId = userProvider.getPatientId;
-        
-                            if (userDocumentId == null || patientId == null) {
-                              print("Error: userDocumentId o patientId es nulo.");
-                              // Opcional: Mostrar un mensaje al usuario.
-                              return;
-                            }
-        
-                            final imageData = await _capturarImagen();
-                            if (imageData != null) {
-                              final storageService = StorageService();
-                              final imageUrl = await storageService.uploadImage(
-                                  imageData, userDocumentId, patientId);
-        
-                              if (imageUrl != null) {
-                                // Guardar la URL en Firestore
-                                await FirebaseFirestore.instance
-                                    .collection('usuarios')
-                                    .doc(userDocumentId)
-                                    .collection('patients')
-                                    .doc(patientId)
-                                    .update({'painScaleImage': imageUrl});
-                                print("Imagen subida y URL guardada con éxito.");
-                              } else {
-                                print("Error al subir la imagen.");
-                              }
-                            } else {
-                              print("Error al capturar la imagen.");
-                            }
-        
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MobileDataScreen(),
-                              ),
-                            );
+                            // AQUI se captura la imagen.
                           },
                           icon: Icon(Icons.arrow_forward_sharp, color: Colors.black, size: width * 0.06),
                         ),
