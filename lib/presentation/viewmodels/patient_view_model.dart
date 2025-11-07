@@ -17,7 +17,7 @@ class PatientViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addPatient({
+  Future<String?> addPatient({
     required String userDocumentId,
     required String patientName,
     required String patientAge,
@@ -48,10 +48,10 @@ class PatientViewModel extends ChangeNotifier {
       await _userRepository.addPatientToUser(userDocumentId, newPatient);
 
       _setState(ViewState.success);
-      return true;
+      return patientId;
     } catch (e) {
       _setState(ViewState.error);
-      return false;
+      return null;
     }
   }
 
