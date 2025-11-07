@@ -136,28 +136,6 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
                         ),
                             
                         SizedBox(height: height * 0.02),
-
-                        Consumer<StorageViewModel>(
-                          builder: (context, storageViewModel, child) {
-                            return Column(
-                              children: [
-                                if (storageViewModel.selectedImage != null)
-                                  Image.file(
-                                    storageViewModel.selectedImage!,
-                                    height: height * 0.2,
-                                  ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    storageViewModel.pickImage(ImageSource.gallery);
-                                  },
-                                  child: const Text('Seleccionar Imagen'),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-
-                        SizedBox(height: height * 0.02),
                             
                         TextFormField(
                           controller: textAgeController,
@@ -281,41 +259,54 @@ class ContinueButton extends StatefulWidget {
   State<ContinueButton> createState() => _ContinueButtonState();
 }
 
-class _ContinueButtonState extends State<ContinueButton> {
+import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 
+class _ContinueButtonState extends State<ContinueButton> {
   @override
   Widget build(BuildContext context) {
-    final storageViewModel = Provider.of<StorageViewModel>(context, listen: false);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    void submit() async {
-      if (storageViewModel.selectedImage == null) {
-        // Mostrar un mensaje de error si no se ha seleccionado ninguna imagen.
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor, seleccione una imagen.')),
+    void submit(UserProvider userProvider) async {
+      final patientViewModel = PatientViewModel();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
+      final userDocumentId = userProvider.getUid;
+      final patientName = widget.nameController.text;
+      final patientAge = widget.ageController.text;
+
+      if (userDocumentId != null) {
+        final patientId = await patientViewModel.addPatient(
+          userDocumentId: userDocumentId,
+          patientName: patientName,
+          patientAge: patientAge,
         );
-        return;
-      }
 
-      await storageViewModel.uploadImage(userProvider.getUid!);
+        Navigator.of(context).pop();
 
-      if (storageViewModel.imageUrl != null) {
-        CollectionReference users = FirebaseFirestore.instance.collection('Usuarios');
-        DocumentReference patientRef = await users.doc(userProvider.getUid).collection('patients').add({
-          'name': widget.nameController.text,
-          'age': widget.ageController.text,
-          'image': storageViewModel.imageUrl,
-        });
-
-        Provider.of<UserProvider>(context, listen: false).setPatientId(patientRef.id);
-        Provider.of<UserProvider>(context, listen: false).setUser(widget.nameController.text);
-        Provider.of<UserProvider>(context, listen: false).setAgeUser(widget.ageController.text);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const TabletSelectedEmojiScreen(),
-          ),
+        if (patientId != null) {
+          userProvider.setPatientId(patientId);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TabletSelectedEmojiScreen(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Error al guardar los datos del paciente')),
+          );
+        }
+      } else {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error: No se ha encontrado el usuario')),
         );
       }
     }
@@ -324,11 +315,13 @@ class _ContinueButtonState extends State<ContinueButton> {
       width: widget.width * 0.9,
       child: ElevatedButton(
         // onPressed: widget.nameController.text.isNotEmpty && widget.ageController.text.isNotEmpty && isCheckboxChecked ? () {
-          //Se agrega al gestor de estado el nombre del usuario.
-        onPressed: isbuttonEnabled && isCheckboxChecked ? submit : null,
+        //Se agrega al gestor de estado el nombre del usuario.
+        onPressed: isbuttonEnabled && isCheckboxChecked
+            ? () => submit(userProvider)
+            : null,
 
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromRGBO(39, 54, 114, 1),
+          backgroundColor: const Color.fromRGBO(39, 54, 114, 1),
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(

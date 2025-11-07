@@ -76,4 +76,16 @@ class UserRepository {
       return null;
     }
   }
+
+  Future<void> deletePatientFromUser(
+      String userDocumentId, String patientId) async {
+    final userDocRef = _usersCollection.doc(userDocumentId);
+    final userDoc = await userDocRef.get();
+    final userData = userDoc.data() as Map<String, dynamic>;
+    final user = UserModel.fromJson(userData);
+
+    user.pacientes.removeWhere((patient) => patient.uid == patientId);
+
+    await userDocRef.update(user.toJson());
+  }
 }

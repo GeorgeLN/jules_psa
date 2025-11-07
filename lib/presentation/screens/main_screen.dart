@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:pain_scale_app/presentation/screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -20,9 +21,19 @@ class MainScreen extends StatelessWidget {
 
           if (snapshot.hasData) {
             final user = snapshot.data!;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+            final userProvider =
+                Provider.of<UserProvider>(context, listen: false);
+
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              final userRepository = UserRepository();
+              final userModel = await userRepository.getUser(user.uid);
+              if (userModel != null) {
+                userProvider.setUid(user.uid);
+                userProvider.setUserDocumentId(user.uid);
+                userProvider.setUserModel(userModel);
+              }
             });
+
             return const ResponsiveSelectedEmojiScreen();
           } else {
             return const EmailVerificationMobileScreen();

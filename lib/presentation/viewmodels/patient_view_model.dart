@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/data/models/user_model.dart';
+import 'package:pain_scale_app/data/repositories/storage_repository.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 
 enum ViewState { idle, loading, success, error }
@@ -91,6 +92,146 @@ class PatientViewModel extends ChangeNotifier {
           }
 
           // Actualizar el usuario
+          await _userRepository.updateUser(user);
+        }
+      }
+
+      _setState(ViewState.success);
+      return true;
+    } catch (e) {
+      _setState(ViewState.error);
+      return false;
+    }
+  }
+
+  Future<bool> deletePatient({
+    required String userDocumentId,
+    required String patientId,
+  }) async {
+    try {
+      _setState(ViewState.loading);
+
+      final patient = await _userRepository.getPatient(patientId);
+
+      if (patient != null) {
+        final storageRepository = StorageRepository();
+        await storageRepository.deletePatientImage(patient.imagen);
+      }
+
+      await _userRepository.deletePatient(patientId);
+      await _userRepository.deletePatientFromUser(userDocumentId, patientId);
+
+      _setState(ViewState.success);
+      return true;
+    } catch (e) {
+      _setState(ViewState.error);
+      return false;
+    }
+  }
+
+  Future<bool> updatePatient({
+    required String userDocumentId,
+    required String patientId,
+    required String newName,
+    required String newAge,
+    File? newImage,
+  }) async {
+    try {
+      _setState(ViewState.loading);
+
+      // Get the current patient data
+      final patient = await _userRepository.getPatient(patientId);
+      if (patient == null) {
+        _setState(ViewState.error);
+        return false;
+      }
+
+      String? imageUrl;
+      if (newImage != null) {
+        final storageRepository = StorageRepository();
+        imageUrl = await storageRepository.uploadImage(newImage, userDocumentId);
+        if (imageUrl != null) {
+          await storageRepository.deletePatientImage(patient.imagen);
+        }
+      }
+
+      // Create the updated patient model
+      final updatedPatient = PatientModel(
+        uid: patientId,
+        nombre: newName,
+        edad: newAge,
+        imagen: imageUrl ?? patient.imagen,
+      );
+
+      // Update the patient in the "pacientes" collection
+      await _userRepository.updatePatient(updatedPatient);
+
+      // Update the patient in the user's "pacientes" list
+      final user = await _userRepository.getUser(userDocumentId);
+      if (user != null) {
+        final patientIndex =
+            user.pacientes.indexWhere((p) => p.uid == patientId);
+        if (patientIndex != -1) {
+          user.pacientes[patientIndex] = updatedPatient;
+          await _userRepository.updateUser(user);
+        }
+      }
+
+      _setState(ViewState.success);
+      return true;
+    } catch (e) {
+      _setState(ViewState.error);
+      return false;
+    }
+  }
+
+  Future<bool> updatePatient({
+    required String userDocumentId,
+    required String patientId,
+    required String newName,
+    required String newAge,
+    File? newImage,
+  }) async {
+    try {
+      _setState(ViewState.loading);
+
+      String? imageUrl;
+      if (newImage != null) {
+        final storageRepository = StorageRepository();
+        imageUrl = await storageRepository.uploadImage(newImage, userDocumentId);
+        if (imageUrl != null) {
+          final oldImageUrl = (await _userRepository.getPatient(patientId))?.imagen;
+          if (oldImageUrl != null) {
+            await storageRepository.deletePatientImage(oldImageUrl);
+          }
+        }
+      }
+
+      // Get the current patient data
+      final patient = await _userRepository.getPatient(patientId);
+      if (patient == null) {
+        _setState(ViewState.error);
+        return false;
+      }
+
+      // Create the updated patient model
+      final updatedPatient = PatientModel(
+        uid: patientId,
+        nombre: newName,
+        edad: newAge,
+        imagen: imageUrl ?? patient.imagen,
+      );
+
+      // Update the patient in the "pacientes" collection
+      await _userRepository.updatePatient(updatedPatient);
+
+      // Update the patient in the user's "pacientes" list
+      final user = await _userRepository.getUser(userDocumentId);
+      if (user != null) {
+        final patientIndex =
+            user.pacientes.indexWhere((p) => p.uid == patientId);
+        if (patientIndex != -1) {
+          user.pacientes[patientIndex] = updatedPatient;
           await _userRepository.updateUser(user);
         }
       }
