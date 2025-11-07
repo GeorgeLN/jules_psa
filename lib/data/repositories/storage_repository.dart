@@ -19,4 +19,14 @@ class StorageRepository {
       return null;
     }
   }
+
+  Future<void> deletePatientImage(String imageUrl) async {
+    try {
+      final Reference storageReference = _storage.refFromURL(imageUrl);
+      await storageReference.delete();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error al eliminar la imagen: $e');
+    }
+  }
 }
