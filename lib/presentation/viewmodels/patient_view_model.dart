@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/data/models/user_model.dart';
@@ -184,38 +186,4 @@ class PatientViewModel extends ChangeNotifier {
     }
   }
 }
-      if (patient == null) {
-        _setState(ViewState.error);
-        return false;
-      }
-
-      // Create the updated patient model
-      final updatedPatient = PatientModel(
-        uid: patientId,
-        nombre: newName,
-        edad: newAge,
-        imagen: imageUrl ?? patient.imagen,
-      );
-
-      // Update the patient in the "pacientes" collection
-      await _userRepository.updatePatient(updatedPatient);
-
-      // Update the patient in the user's "pacientes" list
-      final user = await _userRepository.getUser(userDocumentId);
-      if (user != null) {
-        final patientIndex =
-            user.pacientes.indexWhere((p) => p.uid == patientId);
-        if (patientIndex != -1) {
-          user.pacientes[patientIndex] = updatedPatient;
-          await _userRepository.updateUser(user);
-        }
-      }
-
-      _setState(ViewState.success);
-      return true;
-    } catch (e) {
-      _setState(ViewState.error);
-      return false;
-    }
-  }
-}
+  

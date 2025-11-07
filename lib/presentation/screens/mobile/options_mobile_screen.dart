@@ -83,7 +83,7 @@ class OptionsMobileScreen extends StatelessWidget {
                         text: 'Ver listado de pacientes',
 
                         route: MaterialPageRoute(
-                          builder: (context) => const TermsConditionsMobileScreen(),
+                          builder: (context) => const PatientsMobileScreen(),
                         ),
                       ),
                     ],

@@ -1,4 +1,6 @@
 
+export 'package:pain_scale_app/presentation/screens/mobile/patients_mobile_screen.dart';
+
 export 'package:pain_scale_app/presentation/screens/mobile/options_mobile_screen.dart';
 
 export 'package:pain_scale_app/presentation/screens/mobile/terms_conditions_mobile_screen.dart';

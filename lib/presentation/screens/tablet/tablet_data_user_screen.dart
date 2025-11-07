@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
@@ -281,8 +282,6 @@ class ContinueButton extends StatefulWidget {
   State<ContinueButton> createState() => _ContinueButtonState();
 }
 
-import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
-
 class _ContinueButtonState extends State<ContinueButton> {
   @override
   Widget build(BuildContext context) {
@@ -311,7 +310,9 @@ class _ContinueButtonState extends State<ContinueButton> {
       final patientAge = widget.ageController.text;
 
       if (userDocumentId != null) {
-        final imageUrl = await storageViewModel.uploadImage(userDocumentId);
+        // uploadImage currently returns void; await the upload and then read the URL from the view model.
+        await storageViewModel.uploadImage(userDocumentId);
+        final imageUrl = storageViewModel.imageUrl;
 
         if (imageUrl != null) {
           final patientViewModel = PatientViewModel();

@@ -25,11 +25,6 @@ class UserRepository {
     await _usersCollection.doc(id).delete();
   }
 
-  @override
-  Future<void> deletePatient(String id) async {
-    await _patientsCollection.doc(id).delete();
-  }
-
   Future<UserModel?> getUser(String userDocumentId) async {
     final userDocRef = _usersCollection.doc(userDocumentId);
     final userDoc = await userDocRef.get();
