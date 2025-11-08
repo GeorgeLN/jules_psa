@@ -47,9 +47,13 @@ class OptionsMobileScreen extends StatelessWidget {
                   
                   child: Column(
                     children: [
-                      ButtonBack(
-                        width: width,
-                        height: height,
+                      Padding(
+                        padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+
+                        child: ButtonBack(
+                          width: width,
+                          height: height,
+                        ),
                       ),
 
                       SizedBox(height: height * 0.175),
@@ -72,9 +76,7 @@ class OptionsMobileScreen extends StatelessWidget {
                         height: height,
                         text: 'Agregar nuevo paciente',
 
-                        route: MaterialPageRoute(
-                          builder: (context) => const MobileDataUserScreen(),
-                        ),
+                        widg: MobileDataUserScreen(),
                       ),
 
                       OptionButton(
@@ -82,9 +84,7 @@ class OptionsMobileScreen extends StatelessWidget {
                         height: height,
                         text: 'Ver listado de pacientes',
 
-                        route: MaterialPageRoute(
-                          builder: (context) => const PatientsMobileScreen(),
-                        ),
+                        widg: PatientsMobileScreen(),
                       ),
                     ],
                   ),
@@ -103,13 +103,13 @@ class OptionButton extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
-    required this.route,
+    required this.widg,
     required this.text,
   });
 
   final double width;
   final double height;
-  final Route route;
+  final Widget widg;
   final String text;
 
   @override
@@ -124,7 +124,9 @@ class OptionButton extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            route,
+            MaterialPageRoute(
+              builder: ( _ ) => widg,
+            ),
           );
         },
       

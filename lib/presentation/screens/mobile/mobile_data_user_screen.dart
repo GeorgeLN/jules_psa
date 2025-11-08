@@ -1,6 +1,4 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
-
-import 'dart.io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -138,7 +136,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
 
     return Scaffold(
       body: PopScope(
-        canPop: false,
+        canPop: true,
 
         child: SafeArea(
           child: Container(
@@ -165,10 +163,17 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                     margin: EdgeInsets.only(left: width * 0.05, right: width * 0.05),
                     child: Column(
                       children: [
-                        ButtonBack(
-                          width: width,
-                          height: height,
+
+                        Padding(
+                          padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+
+                          child: ButtonBack(
+                            width: width,
+                            height: height,
+                          ),
                         ),
+
+                        SizedBox(height: height * 0.02),
                   
                         Padding(
                           padding: EdgeInsets.only(
@@ -206,9 +211,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SelectedEmojiScreen(
-                                    isChanging: true,
-                                  ),
+                                  builder: (context) => const SelectedEmojiScreen()
                                 ),
                               );
                             },

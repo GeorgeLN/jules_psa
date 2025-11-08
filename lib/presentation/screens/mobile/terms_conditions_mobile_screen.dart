@@ -55,10 +55,16 @@ class _TermsConditionsMobileScreenState extends State<TermsConditionsMobileScree
         
                   child: Column(
                     children: [
-                      ButtonBack(
-                        width: width,
-                        height: height,
+                      Padding(
+                        padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+                        
+                        child: ButtonBack(
+                          width: width,
+                          height: height,
+                        ),
                       ),
+
+                      SizedBox(height: height * 0.025),
         
                       Text(
                         'Estimado usuario.\nTenga en cuenta las sigientes recomendaciones para tener una mejor experiencia.\n\n'

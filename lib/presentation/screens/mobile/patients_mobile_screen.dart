@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
+import 'package:pain_scale_app/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
 import 'mobile_data_user_screen.dart';
@@ -41,13 +42,20 @@ class PatientsMobileScreen extends StatelessWidget {
                     color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.8),
                   ),
                 ),
+                Positioned(
+                  top: height * 0.025,
+                  right: width * 0.85,
+                  child: ButtonBack(
+                    width: width, height: height
+                  ),
+                ),
 
                 patients.isEmpty
                 ? const Center(
                     child: Text('No hay pacientes'),
                   )
                 : Padding(
-                  padding: EdgeInsets.only(top: width * 0.05),
+                  padding: EdgeInsets.only(top: width * 0.15, left: width * 0.05, right: width * 0.05),
 
                   child: ListView.builder(
                       itemCount: patients.length,
@@ -60,9 +68,9 @@ class PatientsMobileScreen extends StatelessWidget {
                           title: Text(
                             patient.nombre,
                             style: GoogleFonts.poppins(
-                              fontSize: width * 0.04,
+                              fontSize: width * 0.035,
                               color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           subtitle: Text(
@@ -105,7 +113,7 @@ class PatientsMobileScreen extends StatelessWidget {
                                             final patientViewModel = PatientViewModel();
                                             final userProvider = Provider.of<UserProvider>(context, listen: false);
                                             final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUserDocumentId!, patientId: patient.uid);
-                  
+                                        
                                             if (success) {
                                               final userRepository = UserRepository();
                                               final userModel = await userRepository.getUser(userProvider.getUserDocumentId!);
