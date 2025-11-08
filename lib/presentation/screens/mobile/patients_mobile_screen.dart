@@ -5,6 +5,7 @@ import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'package:pain_scale_app/widgets/back_button.dart';
 import 'package:provider/provider.dart';
+import 'package:pain_scale_app/presentation/screens/mobile/edit_patient_mobile_screen.dart';
 
 import 'mobile_data_user_screen.dart';
 
@@ -90,7 +91,7 @@ class PatientsMobileScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          MobileDataUserScreen(patient: patient),
+                                          EditPatientMobileScreen(patient: patient),
                                     ),
                                   );
                                 },
