@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Escala de Dolor - App',
-        home: MainScreen(),
+        home: MainScreen()
       ),
     );
   }

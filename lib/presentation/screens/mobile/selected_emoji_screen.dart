@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/presentation/providers/providers.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/services/storage_service.dart';
@@ -107,7 +108,6 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
     super.initState();
     // Inicialmente todas las ondas están ocultas
     _waveVisible = List<bool>.filled(_fixedWavePositions.length, false);
-    PatientModel? patient;
   }
 
   @override
@@ -139,16 +139,20 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                   children: [
                     SizedBox(height: height * 0.02),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
-                          'Escala de dolor',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: width * 0.05,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        ButtonBack(
+                          width: width,
+                          height: height,
                         ),
+                        // Text(
+                        //   'Escala de dolor',
+                        //   style: TextStyle(
+                        //     color: Colors.white,
+                        //     fontSize: width * 0.05,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
                         SizedBox(width: width * 0.04),
                         SizedBox(
                           width: width * 0.35,
@@ -157,6 +161,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
+                        SizedBox(width: width * 0.15),
                       ],
                     ),
                     SizedBox(height: height * 0.02),

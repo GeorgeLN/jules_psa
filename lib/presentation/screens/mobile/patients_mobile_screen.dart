@@ -4,7 +4,7 @@ import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:pain_scale_app/presentation/screens/mobile/mobile_data_user_screen.dart';
 import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
-import 'package:pain_scale_app/widgets/back_button.dart';
+import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
 class PatientsMobileScreen extends StatefulWidget {
@@ -22,6 +22,12 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
     if (userModel != null) {
       userProvider.setUserModel(userModel);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshPatients();
   }
 
   @override

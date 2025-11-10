@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
 import 'package:pain_scale_app/presentation/screens/screens.dart';
@@ -31,6 +32,8 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
       );
 
       if (user != null) {
+        Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+        
         Navigator.push(
           context,
           MaterialPageRoute(

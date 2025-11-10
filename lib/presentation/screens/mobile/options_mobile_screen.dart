@@ -1,7 +1,11 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pain_scale_app/widgets/back_button.dart';
+import 'package:pain_scale_app/data/core/widgets/back_button.dart';
+import 'package:pain_scale_app/presentation/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../screens.dart';
 
@@ -47,12 +51,39 @@ class OptionsMobileScreen extends StatelessWidget {
                   
                   child: Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+                      SizedBox(height: height * 0.025),
 
-                        child: ButtonBack(
-                          width: width,
-                          height: height,
+                      Container(
+                        width: width,
+                        
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ButtonBack(
+                              width: width,
+                              height: height,
+                            ),
+                        
+                            IconButton(
+                              onPressed: () {
+                                //Logout action
+                                FirebaseAuth.instance.signOut();
+                                Provider.of<UserProvider>(context, listen: false).clearUser();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: ( _ ) => LoginMobileScreen()
+                                  ),
+                                  (route) => false
+                                );
+                              },
+                              icon: Icon(
+                                Icons.logout,
+                                color: Colors.white,
+                                size: width * 0.07,
+                              ),
+                            )
+                          ],
                         ),
                       ),
 

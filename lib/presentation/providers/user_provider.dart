@@ -6,7 +6,6 @@ import 'package:pain_scale_app/data/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
   String? _uid;
-  String? _userDocumentId;
   UserModel? _userModel;
   String? _ageUser;
   String? _numberPain;
@@ -14,7 +13,6 @@ class UserProvider with ChangeNotifier {
   Uint8List? _patientPainScaleImage;
 
   String? get getUid => _uid;
-  String? get getUserDocumentId => _userDocumentId;
   UserModel? get getUserModel => _userModel;
   String? get getAgeUser => _ageUser;
   String? get getNumberPain => _numberPain;
@@ -37,7 +35,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void setUserDocumentId(String user) {
-    _userDocumentId = user;
+    _uid = user;
     notifyListeners();
   }
 
@@ -57,10 +55,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void clearUser() {
-    _userDocumentId = null;
-    _userModel = null;
-    _numberPain = null;
-    _patientPainScaleImage = null;
+    _uid = null;
     notifyListeners();
   }
 }

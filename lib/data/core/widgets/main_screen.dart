@@ -11,6 +11,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shortest = MediaQuery.of(context).size.shortestSide;
+
     return Scaffold(
       body: StreamBuilder <User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -36,7 +38,11 @@ class MainScreen extends StatelessWidget {
 
             return const ResponsiveSelectedEmojiScreen();
           } else {
-            return const EmailVerificationMobileScreen();
+            if (shortest > 400) {
+              return const LoginTabletScreen();
+            } else {
+              return const LoginMobileScreen();
+            }
           }
         },
       ),

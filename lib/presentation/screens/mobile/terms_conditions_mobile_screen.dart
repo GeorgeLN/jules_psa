@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pain_scale_app/widgets/back_button.dart';
+import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 
 import '../screens.dart';
 

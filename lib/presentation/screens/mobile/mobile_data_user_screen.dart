@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
-import 'package:pain_scale_app/widgets/back_button.dart';
+import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
@@ -69,7 +69,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final patientViewModel = PatientViewModel();
 
-      final userDocumentId = userProvider.getUserDocumentId;
+      final userDocumentId = userProvider.getUid;
       final patientName = textNameController.text;
       final patientAge = textAgeController.text;
 
@@ -86,7 +86,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
           Navigator.of(context).pop();
 
           if (success) {
-            final userModel = await UserRepository().getUser(userProvider.getUserDocumentId!);
+            final userModel = await UserRepository().getUser(userProvider.getUid!);
             if (userModel != null) {
               userProvider.setUserModel(userModel);
             }

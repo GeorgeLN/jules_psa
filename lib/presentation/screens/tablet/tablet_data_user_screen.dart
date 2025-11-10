@@ -351,7 +351,7 @@ class _ContinueButtonState extends State<ContinueButton> {
       );
 
       final patientViewModel = PatientViewModel();
-      final userDocumentId = userProvider.getUserDocumentId;
+      final userDocumentId = userProvider.getUid;
       final patientName = widget.nameController.text;
       final patientAge = widget.ageController.text;
 
@@ -369,7 +369,7 @@ class _ContinueButtonState extends State<ContinueButton> {
 
           if (success) {
             final userModel =
-                await UserRepository().getUser(userProvider.getUserDocumentId!);
+                await UserRepository().getUser(userProvider.getUid!);
             if (userModel != null) {
               userProvider.setUserModel(userModel);
             }
