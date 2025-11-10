@@ -28,6 +28,7 @@ class SelectedEmojiScreen extends StatefulWidget {
 class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final GlobalKey _screenshotKey = GlobalKey();
+  bool _isLoading = false;
 
   final List<String> emojiSounds = [
     // Aquí van los sonidos, uno por cada emoji
@@ -286,82 +287,127 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
-                        child: IconButton(
-                          onPressed: widget.isEditing == false
-                          ? () async {
-                            try {
-                              final userProvider = Provider.of<UserProvider>(context, listen: false);
-                              final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+                        child: _isLoading
+                            ? const CircularProgressIndicator()
+                            : IconButton(
+                                onPressed: widget.isEditing == false
+                                    ? () async {
+                                        setState(() {
+                                          _isLoading = true;
+                                        });
+                                        try {
+                                          final userProvider =
+                                              Provider.of<UserProvider>(context,
+                                                  listen: false);
+                                          final patientViewModel = Provider.of<
+                                              PatientViewModel>(context,
+                                              listen: false);
 
-                              final userId = userProvider.getUid;
-                              final patientId = widget.patientId;
+                                          final userId = userProvider.getUid;
+                                          final patientId = widget.patientId;
 
-                              if (userId != null && patientId != null) {
-                                final imageBytes = await _capturarImagen();
+                                          if (userId != null &&
+                                              patientId != null) {
+                                            final imageBytes =
+                                                await _capturarImagen();
 
-                                if (imageBytes != null) {
-                                  userProvider.setPatientPainScaleImage(imageBytes);
+                                            if (imageBytes != null) {
+                                              userProvider
+                                                  .setPatientPainScaleImage(
+                                                      imageBytes);
 
-                                  final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
+                                              final imageUrl =
+                                                  await StorageService()
+                                                      .uploadImage(imageBytes,
+                                                          userId, patientId);
 
-                                  if (imageUrl != null) {
-                                    await patientViewModel.updatePatientImage(
-                                      userDocumentId: userId,
-                                      patientId: patientId,
-                                      imageUrl: imageUrl,
-                                    );
+                                              if (imageUrl != null) {
+                                                await patientViewModel
+                                                    .updatePatientImage(
+                                                  userDocumentId: userId,
+                                                  patientId: patientId,
+                                                  imageUrl: imageUrl,
+                                                );
 
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const MobileDataScreen(),
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
-                            } catch (e) {
-                              print("Error al guardar la imagen y navegar: $e");
-                            }
-                          }
-                          : () async {
-                            try {
-                              final userProvider = Provider.of<UserProvider>(context, listen: false);
-                              final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MobileDataScreen(),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          }
+                                        } catch (e) {
+                                          print(
+                                              "Error al guardar la imagen y navegar: $e");
+                                        } finally {
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                        }
+                                      }
+                                    : () async {
+                                        setState(() {
+                                          _isLoading = true;
+                                        });
+                                        try {
+                                          final userProvider =
+                                              Provider.of<UserProvider>(context,
+                                                  listen: false);
+                                          final patientViewModel = Provider.of<
+                                              PatientViewModel>(context,
+                                              listen: false);
 
-                              final userId = userProvider.getUid;
-                              final patientId = widget.patient?.uid;
+                                          final userId = userProvider.getUid;
+                                          final patientId = widget.patient?.uid;
 
-                              if (userId != null && patientId != null) {
-                                final imageBytes = await _capturarImagen();
+                                          if (userId != null &&
+                                              patientId != null) {
+                                            final imageBytes =
+                                                await _capturarImagen();
 
-                                if (imageBytes != null) {
-                                  userProvider.setPatientPainScaleImage(imageBytes);
+                                            if (imageBytes != null) {
+                                              userProvider
+                                                  .setPatientPainScaleImage(
+                                                      imageBytes);
 
-                                  final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
+                                              final imageUrl =
+                                                  await StorageService()
+                                                      .uploadImage(imageBytes,
+                                                          userId, patientId);
 
-                                  if (imageUrl != null) {
-                                    await patientViewModel.updatePatientImage(
-                                      userDocumentId: userId,
-                                      patientId: patientId,
-                                      imageUrl: imageUrl,
-                                    );
+                                              if (imageUrl != null) {
+                                                await patientViewModel
+                                                    .updatePatientImage(
+                                                  userDocumentId: userId,
+                                                  patientId: patientId,
+                                                  imageUrl: imageUrl,
+                                                );
 
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const MobileDataScreen(),
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
-                            } catch (e) {
-                              print("Error al guardar la imagen y navegar: $e");
-                            }
-                          },
-                          icon: Icon(Icons.arrow_forward_sharp, color: Colors.black, size: width * 0.06),
-                        ),
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MobileDataScreen(),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          }
+                                        } catch (e) {
+                                          print(
+                                              "Error al guardar la imagen y navegar: $e");
+                                        } finally {
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                        }
+                                      },
+                                icon: Icon(Icons.arrow_forward_sharp,
+                                    color: Colors.black, size: width * 0.06),
+                              ),
                       ),
                     ],
                   ),

@@ -24,6 +24,7 @@ class TabletSelectedEmojiScreen extends StatefulWidget {
 class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final GlobalKey _screenshotKey = GlobalKey();
+  bool _isLoading = false;
 
   // Posiciones relativas de las ondas (ajustadas para tablet)
   final List<Map<String, double>> _fixedWavePositions = [
@@ -262,49 +263,72 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
-                        child: IconButton(
-                          onPressed: () async {
-                          final userProvider = Provider.of<UserProvider>(context, listen: false);
-                          final userDocumentId = userProvider.getUid;
-                          final patientId = userProvider.getPatientId;
+                        child: _isLoading
+                            ? const CircularProgressIndicator()
+                            : IconButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  try {
+                                    final userProvider =
+                                        Provider.of<UserProvider>(context,
+                                            listen: false);
+                                    final userDocumentId = userProvider.getUid;
+                                    final patientId = userProvider.getPatientId;
 
-                          if (userDocumentId == null || patientId == null) {
-                            print("Error: userDocumentId o patientId es nulo.");
-                            // Opcional: Mostrar un mensaje al usuario.
-                            return;
-                          }
+                                    if (userDocumentId == null ||
+                                        patientId == null) {
+                                      print(
+                                          "Error: userDocumentId o patientId es nulo.");
+                                      // Opcional: Mostrar un mensaje al usuario.
+                                      return;
+                                    }
 
-                          final imageData = await _capturarImagen();
-                          if (imageData != null) {
-                            final storageService = StorageService();
-                            final imageUrl = await storageService.uploadImage(
-                                imageData, userDocumentId, patientId);
+                                    final imageData = await _capturarImagen();
+                                    if (imageData != null) {
+                                      final storageService = StorageService();
+                                      final imageUrl =
+                                          await storageService.uploadImage(
+                                              imageData,
+                                              userDocumentId,
+                                              patientId);
 
-                            if (imageUrl != null) {
-                              // Guardar la URL en Firestore
-                              await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(userDocumentId)
-                                  .collection('patients')
-                                  .doc(patientId)
-                                  .update({'painScaleImage': imageUrl});
-                              print("Imagen subida y URL guardada con éxito.");
-                            } else {
-                              print("Error al subir la imagen.");
-                            }
-                          } else {
-                            print("Error al capturar la imagen.");
-                          }
+                                      if (imageUrl != null) {
+                                        // Guardar la URL en Firestore
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(userDocumentId)
+                                            .collection('patients')
+                                            .doc(patientId)
+                                            .update({
+                                          'painScaleImage': imageUrl
+                                        });
+                                        print(
+                                            "Imagen subida y URL guardada con éxito.");
+                                      } else {
+                                        print("Error al subir la imagen.");
+                                      }
+                                    } else {
+                                      print("Error al capturar la imagen.");
+                                    }
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MobileDataScreen(),
-                            ),
-                          );
-                        },
-                          icon: Icon(Icons.arrow_forward_sharp, color: Colors.black, size: width * 0.06),
-                        ),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MobileDataScreen(),
+                                      ),
+                                    );
+                                  } finally {
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                  }
+                                },
+                                icon: Icon(Icons.arrow_forward_sharp,
+                                    color: Colors.black, size: width * 0.06),
+                              ),
                       ),
                     ],
                   ),
