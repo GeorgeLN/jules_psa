@@ -4,17 +4,21 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/presentation/providers/providers.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/services/storage_service.dart';
 import '../screens.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../viewmodels/patient_view_model.dart';
 
 class SelectedEmojiScreen extends StatefulWidget {
-  const SelectedEmojiScreen({super.key});
+  const SelectedEmojiScreen({super.key, required this.isEditing, this.patient, this.patientId});
+
+  final PatientModel? patient; // For editing existing patient
+  final String? patientId; // For adding new patient
+  final bool isEditing;
 
   @override
   _SelectedEmojiScreenState createState() => _SelectedEmojiScreenState();
@@ -103,6 +107,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
     super.initState();
     // Inicialmente todas las ondas están ocultas
     _waveVisible = List<bool>.filled(_fixedWavePositions.length, false);
+    PatientModel? patient;
   }
 
   @override
@@ -243,7 +248,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                         Container(
                           padding: EdgeInsets.all(width * 0.05),
                           margin: EdgeInsets.only(right: width * 0.2),
-                          child: WaveTapScreen(captureKey: _screenshotKey),
+                          child: WaveTapScreen(captureKey: _screenshotKey), //captureKey: _screenshotKey
                         ),
                       ],
                     ),
@@ -277,13 +282,50 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          onPressed: () async {
+                          onPressed: widget.isEditing == false
+                          ? () async {
                             try {
                               final userProvider = Provider.of<UserProvider>(context, listen: false);
                               final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
 
                               final userId = userProvider.getUid;
-                              final patientId = userProvider.getPatientId;
+                              final patientId = widget.patientId;
+
+                              if (userId != null && patientId != null) {
+                                final imageBytes = await _capturarImagen();
+
+                                if (imageBytes != null) {
+                                  userProvider.setPatientPainScaleImage(imageBytes);
+
+                                  final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
+
+                                  if (imageUrl != null) {
+                                    await patientViewModel.updatePatientImage(
+                                      userDocumentId: userId,
+                                      patientId: patientId,
+                                      imageUrl: imageUrl,
+                                    );
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MobileDataScreen(),
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+                            } catch (e) {
+                              print("Error al guardar la imagen y navegar: $e");
+                            }
+                          }
+                          : () async {
+                            try {
+                              final userProvider = Provider.of<UserProvider>(context, listen: false);
+                              final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+
+                              final userId = userProvider.getUid;
+                              final patientId = widget.patient?.uid;
 
                               if (userId != null && patientId != null) {
                                 final imageBytes = await _capturarImagen();
@@ -321,7 +363,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                 ]
               )
             )],
-            )),
+          )),
       ));
   }
 }

@@ -150,8 +150,7 @@ class PatientViewModel extends ChangeNotifier {
       String? imageUrl;
       if (newImage != null) {
         final storageRepository = StorageRepository();
-        imageUrl = await storageRepository.uploadPatientImageData(
-            newImage, userDocumentId, patientId);
+        imageUrl = await storageRepository.uploadPatientImageData(newImage, userDocumentId, patientId);
         if (imageUrl != null) {
           await storageRepository.deletePatientImage(patient.imagen);
         }

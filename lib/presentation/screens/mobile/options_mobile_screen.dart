@@ -76,7 +76,7 @@ class OptionsMobileScreen extends StatelessWidget {
                         height: height,
                         text: 'Agregar nuevo paciente',
 
-                        widg: MobileDataUserScreen(),
+                        widg: MobileDataUserScreen(isEditing: false),
                       ),
 
                       OptionButton(

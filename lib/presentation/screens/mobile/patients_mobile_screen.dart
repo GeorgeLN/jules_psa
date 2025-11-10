@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
+import 'package:pain_scale_app/presentation/screens/mobile/mobile_data_user_screen.dart';
 import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'package:pain_scale_app/widgets/back_button.dart';
 import 'package:provider/provider.dart';
-import 'package:pain_scale_app/presentation/screens/mobile/edit_patient_mobile_screen.dart';
-
-import 'mobile_data_user_screen.dart';
 
 class PatientsMobileScreen extends StatelessWidget {
   const PatientsMobileScreen({super.key});
@@ -90,8 +88,7 @@ class PatientsMobileScreen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditPatientMobileScreen(patient: patient),
+                                      builder: (context) => MobileDataUserScreen(patient: patient, isEditing: true),
                                     ),
                                   );
                                 },
@@ -111,23 +108,27 @@ class PatientsMobileScreen extends StatelessWidget {
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            final patientViewModel = PatientViewModel();
-                                            final userProvider = Provider.of<UserProvider>(context, listen: false);
-                                            final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUserDocumentId!, patientId: patient.uid);
-                                        
-                                            if (success) {
-                                              final userRepository = UserRepository();
-                                              final userModel = await userRepository.getUser(userProvider.getUserDocumentId!);
-                                              if (userModel != null) {
-                                                userProvider.setUserModel(userModel);
+                                            try {
+                                              final patientViewModel = PatientViewModel();
+                                              final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                              final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUid!, patientId: patient.uid);
+                                          
+                                              if (success) {
+                                                final userRepository = UserRepository();
+                                                final userModel = await userRepository.getUser(userProvider.getUid!);
+                                                if (userModel != null) {
+                                                  userProvider.setUserModel(userModel);
+                                                }
+                                              } else {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(content: Text('Error al eliminar el paciente'),
+                                                  ),
+                                                );
                                               }
-                                            } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(content: Text('Error al eliminar el paciente'),
-                                                ),
-                                              );
+                                              Navigator.pop(context);
+                                            } catch (e) {
+                                              print('Error al eliminar el paciente: $e');
                                             }
-                                            Navigator.pop(context);
                                           },
                                           child: const Text('Eliminar'),
                                         ),

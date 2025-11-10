@@ -127,7 +127,7 @@ class _TabletDataUserScreenState extends State<TabletDataUserScreen> {
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SelectedEmojiScreen(),
+                                  builder: (context) => const SelectedEmojiScreen(isEditing: true),
                                 ),
                               );
                             },

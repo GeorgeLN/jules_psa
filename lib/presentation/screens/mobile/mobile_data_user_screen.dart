@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
-import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
@@ -11,12 +10,13 @@ import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
 import '../../viewmodels/patient_view_model.dart';
-import '../../viewmodels/storage_view_model.dart';
 import '../screens.dart';
 
 class MobileDataUserScreen extends StatefulWidget {
+  const MobileDataUserScreen({super.key, this.patient, required this.isEditing});
+
   final PatientModel? patient;
-  const MobileDataUserScreen({super.key, this.patient});
+  final bool isEditing;
 
   @override
   State<MobileDataUserScreen> createState() => _MobileDataUserScreenState();
@@ -28,7 +28,9 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
   final TextEditingController textAgeController = TextEditingController();
   Uint8List? _imageFile;
 
-  bool get isEditing => widget.patient != null;
+  bool get isEditing {
+    return widget.patient != null;
+  }
 
   @override
   void initState() {
@@ -84,12 +86,16 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
           Navigator.of(context).pop();
 
           if (success) {
-            final userModel =
-                await UserRepository().getUser(userProvider.getUserDocumentId!);
+            final userModel = await UserRepository().getUser(userProvider.getUserDocumentId!);
             if (userModel != null) {
               userProvider.setUserModel(userModel);
             }
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SelectedEmojiScreen(isEditing: true, patient: widget.patient,),
+              ),
+            );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -110,7 +116,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const SelectedEmojiScreen(),
+                builder: (context) => SelectedEmojiScreen(isEditing: false, patientId: patientId),
               ),
             );
           } else {
@@ -193,32 +199,6 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        if (isEditing) ...[
-                          Consumer<UserProvider>(
-                            builder: (context, userProvider, child) {
-                              _imageFile = userProvider.getPatientPainScaleImage;
-                              return CircleAvatar(
-                                radius: 50,
-                                backgroundImage: _imageFile != null
-                                    ? MemoryImage(_imageFile!)
-                                    : NetworkImage(widget.patient!.imagen)
-                                        as ImageProvider,
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const SelectedEmojiScreen()
-                                ),
-                              );
-                            },
-                            child: const Text('Cambiar imagen'),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
                         TextFormField(
                           controller: textNameController,
                           keyboardType: TextInputType.text,
