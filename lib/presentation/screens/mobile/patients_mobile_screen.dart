@@ -7,8 +7,22 @@ import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'package:pain_scale_app/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
-class PatientsMobileScreen extends StatelessWidget {
+class PatientsMobileScreen extends StatefulWidget {
   const PatientsMobileScreen({super.key});
+
+  @override
+  State<PatientsMobileScreen> createState() => _PatientsMobileScreenState();
+}
+
+class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
+  Future<void> _refreshPatients() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userRepository = UserRepository();
+    final userModel = await userRepository.getUser(userProvider.getUid!);
+    if (userModel != null) {
+      userProvider.setUserModel(userModel);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,92 +70,95 @@ class PatientsMobileScreen extends StatelessWidget {
                 : Padding(
                   padding: EdgeInsets.only(top: width * 0.15, left: width * 0.05, right: width * 0.05),
 
-                  child: ListView.builder(
-                      itemCount: patients.length,
-                      itemBuilder: (context, index) {
-                        final patient = patients[index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(patient.imagen),
-                          ),
-                          title: Text(
-                            patient.nombre,
-                            style: GoogleFonts.poppins(
-                              fontSize: width * 0.035,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
+                  child: RefreshIndicator(
+                    onRefresh: _refreshPatients,
+                    child: ListView.builder(
+                        itemCount: patients.length,
+                        itemBuilder: (context, index) {
+                          final patient = patients[index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(patient.imagen),
                             ),
-                          ),
-                          subtitle: Text(
-                            '${patient.edad} años',
-                            style: GoogleFonts.poppins(
-                              fontSize: width * 0.03,
-                              color: Colors.white,
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit, color: Colors.white),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MobileDataUserScreen(patient: patient, isEditing: true),
-                                    ),
-                                  );
-                                },
+                            title: Text(
+                              patient.nombre,
+                              style: GoogleFonts.poppins(
+                                fontSize: width * 0.035,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.white),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Eliminar paciente'),
-                                      content: const Text('¿Estás seguro de que quieres eliminar este paciente?'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: const Text('Cancelar'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            try {
-                                              final patientViewModel = PatientViewModel();
-                                              final userProvider = Provider.of<UserProvider>(context, listen: false);
-                                              final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUid!, patientId: patient.uid);
-                                          
-                                              if (success) {
-                                                final userRepository = UserRepository();
-                                                final userModel = await userRepository.getUser(userProvider.getUid!);
-                                                if (userModel != null) {
-                                                  userProvider.setUserModel(userModel);
+                            ),
+                            subtitle: Text(
+                              '${patient.edad} años',
+                              style: GoogleFonts.poppins(
+                                fontSize: width * 0.03,
+                                color: Colors.white,
+                              ),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit, color: Colors.white),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MobileDataUserScreen(patient: patient, isEditing: true),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, color: Colors.white),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Eliminar paciente'),
+                                        content: const Text('¿Estás seguro de que quieres eliminar este paciente?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: const Text('Cancelar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              try {
+                                                final patientViewModel = PatientViewModel();
+                                                final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUid!, patientId: patient.uid);
+
+                                                if (success) {
+                                                  final userRepository = UserRepository();
+                                                  final userModel = await userRepository.getUser(userProvider.getUid!);
+                                                  if (userModel != null) {
+                                                    userProvider.setUserModel(userModel);
+                                                  }
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(content: Text('Error al eliminar el paciente'),
+                                                    ),
+                                                  );
                                                 }
-                                              } else {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Error al eliminar el paciente'),
-                                                  ),
-                                                );
+                                                Navigator.pop(context);
+                                              } catch (e) {
+                                                print('Error al eliminar el paciente: $e');
                                               }
-                                              Navigator.pop(context);
-                                            } catch (e) {
-                                              print('Error al eliminar el paciente: $e');
-                                            }
-                                          },
-                                          child: const Text('Eliminar'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                                            },
+                                            child: const Text('Eliminar'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                  ),
                 ),
               ]
             )
