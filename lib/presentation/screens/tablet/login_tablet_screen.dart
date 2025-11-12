@@ -34,6 +34,7 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
 
       if (user != null) {
         Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+        FocusScope.of(context).unfocus();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -101,6 +102,7 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
               ),
               TextButton(
                 onPressed: () {
+                  FocusScope.of(context).unfocus();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

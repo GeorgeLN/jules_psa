@@ -1,6 +1,5 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/core/widgets/back_button.dart';
@@ -24,102 +23,81 @@ class OptionsMobileScreen extends StatelessWidget {
 
         child: SafeArea(
           child: Container(
-            width: width,
+            width: width ,
             height: height,
-        
-            child: Stack(
+            color: Color.fromARGB(255, 6, 98, 196),
+                  
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+            ),
+            
+            child: Column(
               children: [
-                Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/background.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.8),
-                  ),
-                ),
-        
+                SizedBox(height: height * 0.025),
+          
                 Container(
                   width: width,
-                  height: height,
-        
-                  padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.05,
-                  ),
                   
-                  child: Column(
-                    children: [
-                      SizedBox(height: height * 0.025),
-
-                      Container(
-                        width: width,
-                        
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ButtonBack(
-                              width: width,
-                              height: height,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [                  
+                      IconButton(
+                        onPressed: () {
+                          //Logout action
+                          FirebaseAuth.instance.signOut();
+                          Provider.of<UserProvider>(context, listen: false).clearUser();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: ( _ ) => LoginMobileScreen()
                             ),
-                        
-                            IconButton(
-                              onPressed: () {
-                                //Logout action
-                                FirebaseAuth.instance.signOut();
-                                Provider.of<UserProvider>(context, listen: false).clearUser();
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: ( _ ) => LoginMobileScreen()
-                                  ),
-                                  (route) => false
-                                );
-                              },
-                              icon: Icon(
-                                Icons.logout,
-                                color: Colors.white,
-                                size: width * 0.07,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: height * 0.175),
-
-                      Text(
-                        'Seleccione una de las siguientes opciones',
-                        textAlign: TextAlign.center,
-                        
-                        style: GoogleFonts.openSans(
+                            (route) => false
+                          );
+                        },
+                        icon: Icon(
+                          Icons.logout,
                           color: Colors.white,
-                          fontSize: width * 0.046,
-                          fontWeight: FontWeight.bold,
+                          size: width * 0.07,
                         ),
-                      ),
-
-                      SizedBox(height: height * 0.01),
-        
-                      OptionButton(
-                        width: width,
-                        height: height,
-                        text: 'Agregar nuevo paciente',
-
-                        widg: MobileDataUserScreen(isEditing: false),
-                      ),
-
-                      OptionButton(
-                        width: width,
-                        height: height,
-                        text: 'Ver listado de pacientes',
-
-                        widg: PatientsMobileScreen(),
-                      ),
+                      )
                     ],
                   ),
                 ),
+          
+                SizedBox(height: height * 0.175),
+          
+                Text(
+                  'Seleccione una de las siguientes opciones',
+                  textAlign: TextAlign.center,
+                  
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: width * 0.046,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+          
+                SizedBox(height: height * 0.01),
+                  
+                OptionButton(
+                  width: width,
+                  height: height,
+                  text: 'Agregar nuevo paciente',
+          
+                  widg: MobileDataUserScreen(isEditing: false),
+                ),
+          
+                OptionButton(
+                  width: width,
+                  height: height,
+                  text: 'Ver listado de pacientes',
+          
+                  widg: PatientsMobileScreen(),
+                ),
+          
+                // Text(
+                //   'uid: ${Provider.of<UserProvider>(context).getUid}',
+                // ),
               ],
             ),
           ),

@@ -117,23 +117,14 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 6, 98, 196).withOpacity(0.6),
+      
       body: PopScope(
-        canPop: true,
+        canPop: false,
 
         child: SafeArea(
           child: Stack(
             children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/images/background.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned.fill(
-                child: Container(
-                  color: Color.fromARGB(255, 6, 98, 196).withOpacity(0.6),
-                ),
-              ),
               Positioned.fill(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

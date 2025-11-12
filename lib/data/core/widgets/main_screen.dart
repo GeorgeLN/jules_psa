@@ -39,9 +39,9 @@ class MainScreen extends StatelessWidget {
             return const ResponsiveSelectedEmojiScreen();
           } else {
             if (shortest > 400) {
-              return const LoginTabletScreen();
+              return const RegisterTabletScreen();
             } else {
-              return const LoginMobileScreen();
+              return const RegisterMobileScreen();
             }
           }
         },

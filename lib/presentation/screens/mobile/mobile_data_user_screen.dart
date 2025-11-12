@@ -141,184 +141,170 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
       body: PopScope(
         canPop: true,
 
         child: SafeArea(
           child: Container(
             width: width,
-            height: height + height * 0.1,
+            height: height,
           
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/background.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.8),
-                  ),
-                ),
-
-                Form(
-                  key: formKey,
-                  child: Container(
-                    margin: EdgeInsets.only(left: width * 0.05, right: width * 0.05),
-                    child: Column(
-                      children: [
-
-                        Padding(
-                          padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
-
-                          child: ButtonBack(
-                            width: width,
-                            height: height,
-                          ),
-                        ),
-
-                        SizedBox(height: height * 0.02),
-                  
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: width * 0.05,
-                              right: width * 0.05,
-                              bottom: height * 0.03),
-                          child: Text(
-                            isEditing
-                                ? 'Modificar datos del paciente'
-                                : 'Ingrese los datos del paciente',
-                            style: GoogleFonts.poppins(
-                              fontSize:
-                                  width < 800 ? width * 0.05 : width * 0.0325,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        TextFormField(
-                          controller: textNameController,
-                          keyboardType: TextInputType.text,
-                          cursorColor: Colors.white,
-                                  
-                          style: GoogleFonts.poppins(
-                            fontSize: width * 0.04,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                                  
-                          decoration: InputDecoration(
-                            labelText: 'Nombre del Paciente',
-                            labelStyle: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            hintText: 'Ingrese el nombre del paciente',
-                            hintStyle: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                                        
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese el nombre del paciente';
-                            }
-                            return null;
-                          },
-                        ),
-                  
-                        SizedBox(height: height * 0.02),
-                            
-                        TextFormField(
-                          controller: textAgeController,
-                          keyboardType: TextInputType.number,
-                          cursorColor: Colors.white,
-                            
-                          style: GoogleFonts.poppins(
-                            fontSize: width * 0.04,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                            
-                          decoration: InputDecoration(
-                            labelText: 'Edad del Paciente',
-                            labelStyle: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            hintText: 'Ingrese la edad del paciente',
-                            hintStyle: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                  
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese la edad del paciente';
-                            }
-                            return null;
-                          },
-                        ),
-                            
-                        SizedBox(height: height * 0.03), 
-                            
-                        Container(
-                          width: width * 0.9,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _savePatientData();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromRGBO(39, 54, 114, 1),
-                              foregroundColor: Colors.white,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            child: Text(
-                              isEditing
-                                  ? 'Guardar Cambios'
-                                  : 'Guardar y Continuar',
-                              style: TextStyle(
-                                fontSize: width * 0.045,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+            child: Form(
+              key: formKey,
+              child: Container(
+                margin: EdgeInsets.only(left: width * 0.05, right: width * 0.05),
+                child: Column(
+                  children: [
+            
+                    Padding(
+                      padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+            
+                      child: ButtonBack(
+                        width: width,
+                        height: height,
+                      ),
                     ),
-                  ),
+            
+                    SizedBox(height: height * 0.02),
+              
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: width * 0.05,
+                          right: width * 0.05,
+                          bottom: height * 0.03),
+                      child: Text(
+                        isEditing
+                            ? 'Modificar datos del paciente'
+                            : 'Ingrese los datos del paciente',
+                        style: GoogleFonts.poppins(
+                          fontSize:
+                              width < 800 ? width * 0.05 : width * 0.0325,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    TextFormField(
+                      controller: textNameController,
+                      keyboardType: TextInputType.text,
+                      cursorColor: Colors.white,
+                              
+                      style: GoogleFonts.poppins(
+                        fontSize: width * 0.04,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                              
+                      decoration: InputDecoration(
+                        labelText: 'Nombre del Paciente',
+                        labelStyle: GoogleFonts.poppins(
+                          fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        hintText: 'Ingrese el nombre del paciente',
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                                    
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el nombre del paciente';
+                        }
+                        return null;
+                      },
+                    ),
+              
+                    SizedBox(height: height * 0.02),
+                        
+                    TextFormField(
+                      controller: textAgeController,
+                      keyboardType: TextInputType.number,
+                      cursorColor: Colors.white,
+                        
+                      style: GoogleFonts.poppins(
+                        fontSize: width * 0.04,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                        
+                      decoration: InputDecoration(
+                        labelText: 'Edad del Paciente',
+                        labelStyle: GoogleFonts.poppins(
+                          fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        hintText: 'Ingrese la edad del paciente',
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+              
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese la edad del paciente';
+                        }
+                        return null;
+                      },
+                    ),
+                        
+                    SizedBox(height: height * 0.03), 
+                        
+                    Container(
+                      width: width * 0.9,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          _savePatientData();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromRGBO(39, 54, 114, 1),
+                          foregroundColor: Colors.white,
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: Text(
+                          isEditing
+                              ? 'Guardar Cambios'
+                              : 'Guardar y Continuar',
+                          style: TextStyle(
+                            fontSize: width * 0.045,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

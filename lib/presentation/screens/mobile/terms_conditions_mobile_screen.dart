@@ -23,6 +23,7 @@ class _TermsConditionsMobileScreenState extends State<TermsConditionsMobileScree
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
       body: PopScope(
         canPop: false,
         
@@ -30,91 +31,70 @@ class _TermsConditionsMobileScreenState extends State<TermsConditionsMobileScree
           child: Container(
             width: width,
             height: height,
-        
-            child: Stack(
+                  
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+            ),
+                  
+            child: Column(
               children: [
-                Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/background.png',
-                    fit: BoxFit.cover,
+                // Padding(
+                //   padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+                  
+                //   child: ButtonBack(
+                //     width: width,
+                //     height: height,
+                //   ),
+                // ),
+          
+                SizedBox(height: height * 0.025),
+                  
+                Text(
+                  'Estimado usuario.\nTenga en cuenta las sigientes recomendaciones para tener una mejor experiencia.\n\n'
+                  'Los indicadores de dolor son subjetivos y pueden variar entre diferentes personas. Los números asignados a cada nivel de dolor son aproximados y pueden no reflejar con precisión la experiencia individual de cada paciente siendo 1 el menos doloroso y 10 el mas doloroso.\n\n'
+                  'Los emojis son representaciones visuales que pueden ayudar a expresar el sentimiento de dolor en el paciente de manera rápida y sencilla. Siendo 😐 la representación más baja de dolor y 🥵 la representación más alta de dolor.\n',
+                  
+                  textAlign: TextAlign.justify,
+                    
+                  style: GoogleFonts.poppins(
+                    fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                Positioned.fill(
-                  child: Container(
-                    color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.8),
-                  ),
-                ),
-        
-                Container(
-                  width: width,
-                  height: height,
-        
-                  padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.05,
-                  ),
-        
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+                  
+                Row(
+                  children: [                    
+                    Checkbox(
+                      value: isCheckboxCheckedM,
+                      onChanged: (value) {
+                        setState(() {
+                          isCheckboxCheckedM = value ?? false;
+                        });
+                      },
+                      checkColor: Color.fromARGB(255, 6, 98, 196),
+                      activeColor: Colors.white,
+                      side: BorderSide(
+                        color: Colors.white,
+                        width: 1.5,
+                      ),
+                    ),
                         
-                        child: ButtonBack(
-                          width: width,
-                          height: height,
-                        ),
+                    Text(
+                      'He leído y acepto las\nrecomendaciones.',
+                      style: GoogleFonts.poppins(
+                        fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
-
-                      SizedBox(height: height * 0.025),
-        
-                      Text(
-                        'Estimado usuario.\nTenga en cuenta las sigientes recomendaciones para tener una mejor experiencia.\n\n'
-                        'Los indicadores de dolor son subjetivos y pueden variar entre diferentes personas. Los números asignados a cada nivel de dolor son aproximados y pueden no reflejar con precisión la experiencia individual de cada paciente siendo 1 el menos doloroso y 10 el mas doloroso.\n\n'
-                        'Los emojis son representaciones visuales que pueden ayudar a expresar el sentimiento de dolor en el paciente de manera rápida y sencilla. Siendo 😐 la representación más baja de dolor y 🥵 la representación más alta de dolor.\n',
-                        
-                        textAlign: TextAlign.justify,
-                          
-                        style: GoogleFonts.poppins(
-                          fontSize: width < 800 ? width * 0.04 : width * 0.0325,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-        
-                      Row(
-                        children: [                    
-                          Checkbox(
-                            value: isCheckboxCheckedM,
-                            onChanged: (value) {
-                              setState(() {
-                                isCheckboxCheckedM = value ?? false;
-                              });
-                            },
-                            checkColor: Color.fromARGB(255, 6, 98, 196),
-                            activeColor: Colors.white,
-                            side: BorderSide(
-                              color: Colors.white,
-                              width: 1.5,
-                            ),
-                          ),
-                              
-                          Text(
-                            'He leído y acepto las\nrecomendaciones.',
-                            style: GoogleFonts.poppins(
-                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-        
-                      SizedBox(height: height * 0.03),
-        
-                      ContinueButtonM(width: width),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ], // Stack children []
+                  
+                SizedBox(height: height * 0.03),
+                  
+                ContinueButtonM(width: width),
+              ],
             ),
           )
         ),

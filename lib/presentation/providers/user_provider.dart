@@ -2,21 +2,26 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/data/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
   String? _uid;
   UserModel? _userModel;
+  PatientModel? _patientModel;
   String? _ageUser;
   String? _numberPain;
   String? _patientUid;
+  String? _patientName;
   Uint8List? _patientPainScaleImage;
-
+  
   String? get getUid => _uid;
   UserModel? get getUserModel => _userModel;
+  PatientModel? get getPatientModel => _patientModel;
   String? get getAgeUser => _ageUser;
   String? get getNumberPain => _numberPain;
   String? get getPatientId => _patientUid;
+  String? get getPatientName => _patientName;
   Uint8List? get getPatientPainScaleImage => _patientPainScaleImage;
 
   void setUid(String uid) {
@@ -40,6 +45,11 @@ class UserProvider with ChangeNotifier {
   }
 
   void setPatientId(String patientId) {
+    _patientUid = patientId;
+    notifyListeners();
+  }
+
+  void setPatientName(String patientId) {
     _patientUid = patientId;
     notifyListeners();
   }

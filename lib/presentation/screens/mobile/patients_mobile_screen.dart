@@ -40,45 +40,45 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
     final patients = user?.pacientes ?? [];
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+
       body: PopScope(
         canPop: false,
 
         child: SafeArea(
-          child: Container(
-            width: width,
-            height: height,
+          child: patients.isEmpty
+          ? Center(
+              child: Text(
+                'No hay pacientes',
+                style: GoogleFonts.poppins(
+                  fontSize: width * 0.05,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                )
+              ),
+            )
+          : SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+
+            child: Padding(
+              padding: EdgeInsets.only(top: width * 0.05, left: width * 0.05, right: width * 0.05),
             
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/background.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.8),
-                  ),
-                ),
-                Positioned(
-                  top: height * 0.025,
-                  right: width * 0.85,
-                  child: ButtonBack(
-                    width: width, height: height
-                  ),
-                ),
+              child: RefreshIndicator(
+                onRefresh: _refreshPatients,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+                      child: ButtonBack(
+                        width: width,
+                        height: height,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.02),
+                    Container(
+                      height: height * 0.8,
 
-                patients.isEmpty
-                ? const Center(
-                    child: Text('No hay pacientes'),
-                  )
-                : Padding(
-                  padding: EdgeInsets.only(top: width * 0.15, left: width * 0.05, right: width * 0.05),
-
-                  child: RefreshIndicator(
-                    onRefresh: _refreshPatients,
-                    child: ListView.builder(
+                      child: ListView.builder(
                         itemCount: patients.length,
                         itemBuilder: (context, index) {
                           final patient = patients[index];
@@ -134,7 +134,7 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                                 final patientViewModel = PatientViewModel();
                                                 final userProvider = Provider.of<UserProvider>(context, listen: false);
                                                 final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUid!, patientId: patient.uid);
-
+                                
                                                 if (success) {
                                                   final userRepository = UserRepository();
                                                   final userModel = await userRepository.getUser(userProvider.getUid!);
@@ -164,10 +164,11 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                           );
                         },
                       ),
-                  ),
+                    ),
+                  ],
                 ),
-              ]
-            )
+              ),
+            ),
           ),
         ),
       ),
