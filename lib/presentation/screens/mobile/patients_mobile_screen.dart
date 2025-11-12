@@ -15,18 +15,28 @@ class PatientsMobileScreen extends StatefulWidget {
 }
 
 class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
+  late List<bool> _expandedStates;
+
   Future<void> _refreshPatients() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userRepository = UserRepository();
     final userModel = await userRepository.getUser(userProvider.getUid!);
     if (userModel != null) {
       userProvider.setUserModel(userModel);
+      if (mounted) {
+        setState(() {
+          _expandedStates = List<bool>.filled(userModel.pacientes.length, false);
+        });
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final patients = userProvider.getUserModel?.pacientes ?? [];
+    _expandedStates = List<bool>.filled(patients.length, false);
     _refreshPatients();
   }
 
@@ -82,31 +92,39 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                         itemCount: patients.length,
                         itemBuilder: (context, index) {
                           final patient = patients[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(patient.imagen),
-                            ),
-                            title: Text(
-                              patient.nombre,
-                              style: GoogleFonts.poppins(
-                                fontSize: width * 0.035,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
+                          return Card(
+                            color: const Color.fromRGBO(39, 54, 114, 1),
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ExpansionTile(
+                              initiallyExpanded: _expandedStates[index],
+                              onExpansionChanged: (bool expanded) {
+                                setState(() {
+                                  _expandedStates[index] = expanded;
+                                });
+                              },
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(patient.imagen),
                               ),
-                            ),
-                            subtitle: Text(
-                              '${patient.edad} años',
-                              style: GoogleFonts.poppins(
-                                fontSize: width * 0.03,
-                                color: Colors.white,
+                              title: Text(
+                                patient.nombre,
+                                style: GoogleFonts.poppins(
+                                  fontSize: width * 0.035,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
+                              subtitle: Text(
+                                '${patient.edad} años',
+                                style: GoogleFonts.poppins(
+                                  fontSize: width * 0.03,
+                                  color: Colors.white,
+                                ),
+                              ),
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.white),
-                                  onPressed: () {
+                                ListTile(
+                                  leading: const Icon(Icons.edit, color: Colors.white),
+                                  title: const Text('Editar', style: TextStyle(color: Colors.white)),
+                                  onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -115,9 +133,10 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                     );
                                   },
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.white),
-                                  onPressed: () {
+                                ListTile(
+                                  leading: const Icon(Icons.delete, color: Colors.white),
+                                  title: const Text('Eliminar', style: TextStyle(color: Colors.white)),
+                                  onTap: () {
                                     showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
@@ -134,7 +153,7 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                                 final patientViewModel = PatientViewModel();
                                                 final userProvider = Provider.of<UserProvider>(context, listen: false);
                                                 final success = await patientViewModel.deletePatient(userDocumentId: userProvider.getUid!, patientId: patient.uid);
-                                
+
                                                 if (success) {
                                                   final userRepository = UserRepository();
                                                   final userModel = await userRepository.getUser(userProvider.getUid!);
@@ -143,8 +162,7 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                                   }
                                                 } else {
                                                   ScaffoldMessenger.of(context).showSnackBar(
-                                                    const SnackBar(content: Text('Error al eliminar el paciente'),
-                                                    ),
+                                                    const SnackBar(content: Text('Error al eliminar el paciente')),
                                                   );
                                                 }
                                                 Navigator.pop(context);
@@ -157,6 +175,13 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                         ],
                                       ),
                                     );
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.arrow_forward, color: Colors.white),
+                                  title: const Text('Ver detalles', style: TextStyle(color: Colors.white)),
+                                  onTap: () {
+                                    // Aquí va la navegación a la nueva pantalla
                                   },
                                 ),
                               ],
