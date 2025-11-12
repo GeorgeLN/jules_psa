@@ -94,14 +94,27 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                           final patient = patients[index];
                           return Card(
                             color: const Color.fromRGBO(39, 54, 114, 1),
-                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            margin: EdgeInsets.symmetric(vertical: width * 0.015),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(width * 0.025),
+                            ),
+
                             child: ExpansionTile(
+                              backgroundColor: Color.fromRGBO(39, 54, 114, 1),
                               initiallyExpanded: _expandedStates[index],
                               onExpansionChanged: (bool expanded) {
                                 setState(() {
                                   _expandedStates[index] = expanded;
                                 });
                               },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(width * 0.025),
+                              ),
+                              trailing: Icon(
+                                _expandedStates[index] ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                color: Colors.white,
+                                size: width * 0.08,
+                              ),
                               leading: CircleAvatar(
                                 backgroundImage: NetworkImage(patient.imagen),
                               ),
@@ -178,7 +191,10 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                   },
                                 ),
                                 ListTile(
-                                  leading: const Icon(Icons.arrow_forward, color: Colors.white),
+                                  leading: const Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white
+                                  ),
                                   title: const Text('Ver detalles', style: TextStyle(color: Colors.white)),
                                   onTap: () {
                                     // Aquí va la navegación a la nueva pantalla
