@@ -34,6 +34,11 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setPatientModel(PatientModel patientModel) {
+    _patientModel = patientModel;
+    notifyListeners();
+  }
+
   void setPatientPainScaleImage(Uint8List patientPainScaleImage) {
     _patientPainScaleImage = patientPainScaleImage;
     notifyListeners();
