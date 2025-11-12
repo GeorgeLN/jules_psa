@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/presentation/providers/providers.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -279,126 +280,191 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator()
-                            : IconButton(
-                                onPressed: widget.isEditing == false
-                                    ? () async {
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        try {
-                                          final userProvider =
-                                              Provider.of<UserProvider>(context,
-                                                  listen: false);
-                                          final patientViewModel = Provider.of<
-                                              PatientViewModel>(context,
+                          ? const CircularProgressIndicator()
+                          : IconButton(
+                              onPressed: widget.isEditing == false
+                                ? () async {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    try {
+                                      final userProvider =
+                                          Provider.of<UserProvider>(context,
                                               listen: false);
+                                      final patientViewModel = Provider.of<
+                                          PatientViewModel>(context,
+                                          listen: false);
 
-                                          final userId = userProvider.getUid;
-                                          final patientId = widget.patientId;
+                                      final userId = userProvider.getUid;
+                                      final patientId = widget.patientId;
 
-                                          if (userId != null &&
-                                              patientId != null) {
-                                            final imageBytes =
-                                                await _capturarImagen();
+                                      if (userId != null &&
+                                          patientId != null) {
+                                        final imageBytes =
+                                            await _capturarImagen();
 
-                                            if (imageBytes != null) {
-                                              userProvider
-                                                  .setPatientPainScaleImage(
-                                                      imageBytes);
+                                        if (imageBytes != null) {
+                                          userProvider
+                                              .setPatientPainScaleImage(
+                                                  imageBytes);
 
-                                              final imageUrl =
-                                                  await StorageService()
-                                                      .uploadImage(imageBytes,
-                                                          userId, patientId);
+                                          final imageUrl =
+                                              await StorageService()
+                                                  .uploadImage(imageBytes,
+                                                      userId, patientId);
 
-                                              if (imageUrl != null) {
-                                                await patientViewModel
-                                                    .updatePatientImage(
-                                                  userDocumentId: userId,
-                                                  patientId: patientId,
-                                                  imageUrl: imageUrl,
-                                                );
+                                          if (imageUrl != null) {
+                                            await patientViewModel.updatePatientImage(
+                                              userDocumentId: userId,
+                                              patientId: patientId,
+                                              imageUrl: imageUrl,
+                                            );
 
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const MobileDataScreen(),
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                  'Estado',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.05,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
-                                                );
-                                              }
-                                            }
+                                                ),
+                                                content: Text(
+                                                  widget.isEditing
+                                                    ? 'Paciente actualizado!'
+                                                    : 'Paciente registrado!',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.04,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pushAndRemoveUntil(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => const OptionsMobileScreen(),
+                                                      ),
+                                                      (route) => false,
+                                                    ),
+                                                    child: Text(
+                                                      'Regresar',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.04,
+                                                        color: Colors.red,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) =>
+                                            //         const MobileDataScreen(),
+                                            //   ),
+                                            // );
                                           }
-                                        } catch (e) {
-                                          print(
-                                              "Error al guardar la imagen y navegar: $e");
-                                        } finally {
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
                                         }
                                       }
-                                    : () async {
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        try {
-                                          final userProvider =
-                                              Provider.of<UserProvider>(context,
-                                                  listen: false);
-                                          final patientViewModel = Provider.of<
-                                              PatientViewModel>(context,
-                                              listen: false);
+                                    } catch (e) {
+                                      print(
+                                          "Error al guardar la imagen y navegar: $e");
+                                    } finally {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    }
+                                  }
+                                : () async {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    try {
+                                      final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                      final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+                                      final userId = userProvider.getUid;
+                                      final patientId = widget.patient?.uid;
 
-                                          final userId = userProvider.getUid;
-                                          final patientId = widget.patient?.uid;
+                                      if (userId != null && patientId != null) {
+                                        final imageBytes = await _capturarImagen();
 
-                                          if (userId != null &&
-                                              patientId != null) {
-                                            final imageBytes =
-                                                await _capturarImagen();
+                                        if (imageBytes != null) {
+                                          userProvider.setPatientPainScaleImage(imageBytes);
 
-                                            if (imageBytes != null) {
-                                              userProvider
-                                                  .setPatientPainScaleImage(
-                                                      imageBytes);
+                                          final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
-                                              final imageUrl =
-                                                  await StorageService()
-                                                      .uploadImage(imageBytes,
-                                                          userId, patientId);
+                                          if (imageUrl != null) {
+                                            await patientViewModel.updatePatientImage(
+                                              userDocumentId: userId,
+                                              patientId: patientId,
+                                              imageUrl: imageUrl,
+                                            );
 
-                                              if (imageUrl != null) {
-                                                await patientViewModel
-                                                    .updatePatientImage(
-                                                  userDocumentId: userId,
-                                                  patientId: patientId,
-                                                  imageUrl: imageUrl,
-                                                );
-
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const MobileDataScreen(),
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                  'Estado',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.05,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
-                                                );
-                                              }
-                                            }
+                                                ),
+                                                content: Text(
+                                                  widget.isEditing
+                                                    ? 'Paciente actualizado!'
+                                                    : 'Paciente registrado!',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.04,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pushAndRemoveUntil(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => const OptionsMobileScreen(),
+                                                      ),
+                                                      (route) => false,
+                                                    ),
+                                                    child: Text(
+                                                      'Regresar',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.04,
+                                                        color: Colors.red,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
                                           }
-                                        } catch (e) {
-                                          print(
-                                              "Error al guardar la imagen y navegar: $e");
-                                        } finally {
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
                                         }
-                                      },
-                                icon: Icon(Icons.arrow_forward_sharp,
-                                    color: Colors.black, size: width * 0.06),
+                                      }
+                                    } catch (e) {
+                                      print(
+                                          "Error al guardar la imagen y navegar: $e");
+                                    } finally {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    }
+                                  },
+                              icon: Icon(
+                                Icons.arrow_forward_sharp,
+                                color: Colors.black, size: width * 0.06
                               ),
+                            ),
                       ),
                     ],
                   ),

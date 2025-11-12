@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pain_scale_app/data/core/widgets/back_button.dart';
-import 'package:pain_scale_app/presentation/screens/mobile/options_mobile_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
@@ -16,7 +14,7 @@ class MobileDataScreen extends StatelessWidget {
     final patient = Provider.of<UserProvider>(context).getPatientModel;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: const Color.fromARGB(255, 8, 151, 84),
       body: PopScope(
         canPop: false,
         child: SafeArea(
@@ -58,7 +56,7 @@ class MobileDataScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
                             patient.imagen,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),

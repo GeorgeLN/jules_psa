@@ -117,7 +117,12 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                 size: width * 0.08,
                               ),
                               leading: CircleAvatar(
-                                backgroundImage: NetworkImage(patient.imagen),
+                                backgroundColor: Colors.blueAccent,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.black,
+                                  size: width * 0.08,
+                                ),
                               ),
                               title: Text(
                                 patient.nombre,

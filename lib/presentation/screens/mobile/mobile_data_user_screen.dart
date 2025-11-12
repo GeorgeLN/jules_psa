@@ -143,7 +143,7 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 6, 98, 196),
       body: PopScope(
-        canPop: true,
+        canPop: false,
 
         child: SafeArea(
           child: Container(
@@ -293,8 +293,8 @@ class _MobileDataUserScreenState extends State<MobileDataUserScreen> {
                         ),
                         child: Text(
                           isEditing
-                              ? 'Guardar Cambios'
-                              : 'Guardar y Continuar',
+                              ? 'Guardar y continuar'
+                              : 'Guardar y continuar',
                           style: TextStyle(
                             fontSize: width * 0.045,
                             fontWeight: FontWeight.bold,
