@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
+import 'package:pain_scale_app/presentation/screens/mobile/mobile_data_screen.dart';
 import 'package:pain_scale_app/presentation/screens/mobile/mobile_data_user_screen.dart';
 import 'package:pain_scale_app/presentation/viewmodels/patient_view_model.dart';
 import 'package:pain_scale_app/data/core/widgets/back_button.dart';
@@ -197,7 +198,14 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                                   ),
                                   title: const Text('Ver detalles', style: TextStyle(color: Colors.white)),
                                   onTap: () {
-                                    // Aquí va la navegación a la nueva pantalla
+                                    final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                    userProvider.setPatientModel(patient);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MobileDataScreen(),
+                                      ),
+                                    );
                                   },
                                 ),
                               ],
