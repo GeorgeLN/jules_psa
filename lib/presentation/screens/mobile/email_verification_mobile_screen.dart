@@ -1,6 +1,4 @@
 
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/presentation/screens/screens.dart';
 
 class EmailVerificationMobileScreen extends StatefulWidget {
-   
   const EmailVerificationMobileScreen({super.key});
 
   @override
@@ -23,7 +20,6 @@ class _EmailVerificationMobileScreenState extends State<EmailVerificationMobileS
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     isEmailVerified = FirebaseAuth.instance.currentUser?.emailVerified ?? false;
@@ -40,7 +36,6 @@ class _EmailVerificationMobileScreenState extends State<EmailVerificationMobileS
 
   @override
   void dispose() {
-    // TODO: implement dispose
     timer?.cancel();
     super.dispose();
   }
@@ -63,17 +58,21 @@ class _EmailVerificationMobileScreenState extends State<EmailVerificationMobileS
       await Future.delayed(const Duration(seconds: 5));
       setState(() => canResendEmail = true);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Correo de verificación enviado. Revisa tu bandeja de entrada.'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Correo de verificación enviado. Revisa tu bandeja de entrada.'),
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+          ),
+        );
+      }
     }
   }
 

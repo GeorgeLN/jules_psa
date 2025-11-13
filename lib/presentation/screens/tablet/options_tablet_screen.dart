@@ -80,7 +80,7 @@ class OptionsTabletScreen extends StatelessWidget {
 
                 SizedBox(height: height * 0.01),
 
-                OptionButton(
+                OptionButtonT(
                   width: width,
                   height: height,
                   text: 'Agregar nuevo paciente',
@@ -88,7 +88,7 @@ class OptionsTabletScreen extends StatelessWidget {
                   widg: TabletDataUserScreen(isEditing: false),
                 ),
 
-                OptionButton(
+                OptionButtonT(
                   width: width,
                   height: height,
                   text: 'Ver listado de pacientes',
@@ -104,8 +104,8 @@ class OptionsTabletScreen extends StatelessWidget {
   }
 }
 
-class OptionButton extends StatelessWidget {
-  const OptionButton({
+class OptionButtonT extends StatelessWidget {
+  const OptionButtonT({
     super.key,
     required this.width,
     required this.height,

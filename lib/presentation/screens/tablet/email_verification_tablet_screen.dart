@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/presentation/screens/screens.dart';
 
 class EmailVerificationTabletScreen extends StatefulWidget {
-
   const EmailVerificationTabletScreen({super.key});
 
   @override

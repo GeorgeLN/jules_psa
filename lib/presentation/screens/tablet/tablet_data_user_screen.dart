@@ -17,8 +17,10 @@ import 'package:pain_scale_app/data/models/patient_model.dart';
 import '../screens.dart';
 
 class TabletDataUserScreen extends StatefulWidget {
+  const TabletDataUserScreen({super.key, this.patient, required this.isEditing});
+
   final PatientModel? patient;
-  const TabletDataUserScreen({super.key, this.patient});
+  final bool isEditing;
 
   @override
   State<TabletDataUserScreen> createState() => _TabletDataUserScreenState();
