@@ -36,7 +36,7 @@ class _RegisterTabletScreenState extends State<RegisterTabletScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ResponsiveSelectedEmojiScreen(),
+            builder: (context) => const OptionsTabletScreen(),
           ),
         );
       } else {
