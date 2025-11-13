@@ -19,3 +19,7 @@ export 'package:pain_scale_app/presentation/screens/mobile/login_mobile_screen.d
 export 'package:pain_scale_app/presentation/screens/mobile/register_mobile_screen.dart';
 export 'package:pain_scale_app/presentation/screens/tablet/login_tablet_screen.dart';
 export 'package:pain_scale_app/presentation/screens/mobile/email_verification_mobile_screen.dart';
+export 'package:pain_scale_app/presentation/screens/tablet/terms_conditions_tablet_screen.dart';
+export 'package:pain_scale_app/presentation/screens/tablet/email_verification_tablet_screen.dart';
+export 'package:pain_scale_app/presentation/screens/tablet/options_tablet_screen.dart';
+export 'package:pain_scale_app/presentation/screens/tablet/patients_tablet_screen.dart';

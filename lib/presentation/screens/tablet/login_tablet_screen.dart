@@ -38,7 +38,7 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ResponsiveSelectedEmojiScreen(),
+            builder: (context) => const OptionsTabletScreen(),
           ),
         );
       } else {
