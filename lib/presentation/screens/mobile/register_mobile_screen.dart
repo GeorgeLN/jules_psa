@@ -17,6 +17,7 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -34,24 +35,25 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final authRepository = Provider.of<AuthRepository>(context, listen: false);
-
-      final user = await authRepository.registrarUsuario(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-        _nameController.text.trim(),
-      );
-
-      if (user != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const EmailVerificationMobileScreen(),
-          ),
+      try {
+        final user = await authRepository.registrarUsuario(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+          _nameController.text.trim(),
         );
-      } else {
+
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EmailVerificationMobileScreen(),
+            ),
+          );
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error al registrarse. Por favor, intente de nuevo.'),
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
           ),
         );
       }
@@ -174,7 +176,7 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
                           ),
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Contraseña',
                             labelStyle: GoogleFonts.poppins(
@@ -189,6 +191,19 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.white),
                               borderRadius: BorderRadius.circular(15),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                             ),
                           ),
                           validator: (value) {
