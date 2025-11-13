@@ -6,16 +6,27 @@ import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:pain_scale_app/presentation/screens/screens.dart';
 import 'package:provider/provider.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final shortest = MediaQuery.of(context).size.shortestSide;
+  State<MainScreen> createState() => _MainScreenState();
+}
 
+class _MainScreenState extends State<MainScreen> {
+  late final Stream<User?> _authStateChanges;
+
+  @override
+  void initState() {
+    super.initState();
+    _authStateChanges = FirebaseAuth.instance.authStateChanges();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder <User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: _authStateChanges,
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -23,8 +34,7 @@ class MainScreen extends StatelessWidget {
 
           if (snapshot.hasData) {
             final user = snapshot.data!;
-            final userProvider =
-                Provider.of<UserProvider>(context, listen: false);
+            final userProvider = Provider.of<UserProvider>(context, listen: false);
 
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               final userRepository = UserRepository();
@@ -38,14 +48,25 @@ class MainScreen extends StatelessWidget {
 
             return const ResponsiveSelectedEmojiScreen();
           } else {
-            if (shortest > 400) {
-              return const RegisterTabletScreen();
-            } else {
-              return const RegisterMobileScreen();
-            }
+            return const RegisterScreen();
           }
         },
       ),
     );
+  }
+}
+
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final shortest = MediaQuery.of(context).size.shortestSide;
+
+    if (shortest > 400) {
+      return const RegisterTabletScreen();
+    } else {
+      return const RegisterMobileScreen();
+    }
   }
 }

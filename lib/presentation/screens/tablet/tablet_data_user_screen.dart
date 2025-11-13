@@ -2,7 +2,7 @@
 
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package.google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
 import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/data/core/widgets/back_button.dart';

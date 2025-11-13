@@ -19,6 +19,11 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -81,17 +86,6 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Container(
-                //   width: width * 0.5,
-                //   height: height * 0.25,
-                //   margin: EdgeInsets.symmetric(vertical: height * 0.05),
-                //   decoration: const BoxDecoration(
-                //     image: DecorationImage(
-                //       image: AssetImage('assets/images/emoji_icon.png'),
-                //       fit: BoxFit.contain,
-                //     ),
-                //   ),
-                // ),
                 Lottie.asset(
                   'assets/animations/pain.json',
                   width: width * 0.75,

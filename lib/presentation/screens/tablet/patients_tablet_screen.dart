@@ -121,7 +121,7 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
                                 child: Icon(
                                   Icons.person,
                                   color: Colors.black,
-                                  size: width * 0.06,
+                                  size: width * 0.05,
                                 ),
                               ),
                               title: Text(
@@ -142,7 +142,13 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
                               children: [
                                 ListTile(
                                   leading: const Icon(Icons.edit, color: Colors.white),
-                                  title: const Text('Editar', style: TextStyle(color: Colors.white)),
+                                  title: Text(
+                                    'Editar',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: width * 0.025,
+                                      color: Colors.white
+                                    ),
+                                  ),
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -154,17 +160,42 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
                                 ),
                                 ListTile(
                                   leading: const Icon(Icons.delete, color: Colors.white),
-                                  title: const Text('Eliminar', style: TextStyle(color: Colors.white)),
+                                  title: Text(
+                                    'Eliminar',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: width * 0.025,
+                                      color: Colors.white
+                                    ),
+                                  ),
                                   onTap: () {
                                     showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
-                                        title: const Text('Eliminar paciente'),
-                                        content: const Text('¿Estás seguro de que quieres eliminar este paciente?'),
+                                        title: Text(
+                                          'Eliminar paciente',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: width * 0.03,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          '¿Estás seguro de que quieres eliminar este paciente?',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: width * 0.025,
+                                            color: Colors.black
+                                          ),
+                                        ),
                                         actions: [
                                           TextButton(
                                             onPressed: () => Navigator.pop(context),
-                                            child: const Text('Cancelar'),
+                                            child: Text(
+                                              'Cancelar',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: width * 0.025,
+                                                color: Colors.black,
+                                              ),
+                                            ),
                                           ),
                                           TextButton(
                                             onPressed: () async {
@@ -189,7 +220,14 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
                                                 print('Error al eliminar el paciente: $e');
                                               }
                                             },
-                                            child: const Text('Eliminar'),
+                                            child: Text(
+                                              'Eliminar',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: width * 0.025,
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -201,7 +239,13 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
                                     Icons.arrow_forward,
                                     color: Colors.white
                                   ),
-                                  title: const Text('Ver detalles', style: TextStyle(color: Colors.white)),
+                                  title: Text(
+                                    'Ver detalles',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: width * 0.025,
+                                      color: Colors.white
+                                    ),
+                                  ),
                                   onTap: () {
                                     final userProvider = Provider.of<UserProvider>(context, listen: false);
                                     userProvider.setPatientModel(patient);

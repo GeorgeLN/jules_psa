@@ -73,7 +73,7 @@ class OptionsTabletScreen extends StatelessWidget {
 
                   style: GoogleFonts.poppins(
                     color: Colors.white,
-                    fontSize: width * 0.035,
+                    fontSize: width * 0.03,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -148,7 +148,7 @@ class OptionButtonT extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: width * 0.035,
+            fontSize: width < 800 ? width * 0.04 : width * 0.0325,
             fontWeight: FontWeight.bold,
           ),
         ),
