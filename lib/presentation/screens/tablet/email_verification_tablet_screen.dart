@@ -81,7 +81,7 @@ class _EmailVerificationTabletScreenState extends State<EmailVerificationTabletS
     var width = MediaQuery.of(context).size.width;
 
     return isEmailVerified
-      ? const OptionsTabletScreen()
+      ? const ResponsiveSelectedEmojiScreen()
       : Scaffold(
         backgroundColor: Color.fromARGB(255, 6, 98, 196),
 
