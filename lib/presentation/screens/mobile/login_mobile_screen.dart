@@ -17,6 +17,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -27,25 +28,27 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      final authRepository = Provider.of<AuthRepository>(context, listen: false);
-      final user = await authRepository.signInWithEmailAndPassword(
-        _emailController.text,
-        _passwordController.text,
-      );
-
-      if (user != null) {
-        Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
-        
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const EmailVerificationMobileScreen(),
-          ),
+      final authRepository =
+          Provider.of<AuthRepository>(context, listen: false);
+      try {
+        final user = await authRepository.signInWithEmailAndPassword(
+          _emailController.text,
+          _passwordController.text,
         );
-      } else {
+        if (user != null) {
+          Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EmailVerificationMobileScreen(),
+            ),
+          );
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error al iniciar sesión. Por favor, verificar sus credenciales.'),
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
           ),
         );
       }
@@ -131,7 +134,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                         TextFormField(
                           controller: _passwordController,
                           cursorColor: Colors.white,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           style: GoogleFonts.poppins(
                             fontSize: width * 0.04,
                             color: Colors.white,
@@ -151,6 +154,19 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.white),
                               borderRadius: BorderRadius.circular(15),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                             ),
                           ),
                           validator: (value) {
