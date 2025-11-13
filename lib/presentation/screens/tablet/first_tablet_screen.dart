@@ -214,7 +214,7 @@ class _FirstTabletScreenState extends State<FirstTabletScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const TermsConditionsMobileScreen(),
+                  builder: (context) => const TermsConditionsTabletScreen(),
                 ),
               );
             },

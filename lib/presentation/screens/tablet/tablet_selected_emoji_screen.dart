@@ -1,21 +1,26 @@
-// ignore_for_file: library_private_types_in_public_api, deprecated_member_use, sized_box_for_whitespace, unused_field
+// ignore_for_file: library_private_types_in_public_api, deprecated_member_use, unused_field
 
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
-import 'package:pain_scale_app/data/services/storage_service.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pain_scale_app/data/models/patient_model.dart';
+import 'package:pain_scale_app/presentation/providers/providers.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/providers.dart';
-import '../../../data/core/widgets/wave_tap_screen_tablet.dart';
+import '../../../data/services/storage_service.dart';
 import '../screens.dart';
+import '../../viewmodels/patient_view_model.dart';
 
 class TabletSelectedEmojiScreen extends StatefulWidget {
-  const TabletSelectedEmojiScreen({super.key});
+  const TabletSelectedEmojiScreen({super.key, required this.isEditing, this.patient, this.patientId});
+
+  final PatientModel? patient; // For editing existing patient
+  final String? patientId; // For adding new patient
+  final bool isEditing;
 
   @override
   _TabletSelectedEmojiScreenState createState() => _TabletSelectedEmojiScreenState();
@@ -26,42 +31,8 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
   final GlobalKey _screenshotKey = GlobalKey();
   bool _isLoading = false;
 
-  // Posiciones relativas de las ondas (ajustadas para tablet)
-  final List<Map<String, double>> _fixedWavePositions = [
-    {"left": 0.53, "top": 0.07},   // cabeza
-    //{"left": 0.53, "top": 0.16},  // cuello
-    {"left": 0.41, "top": 0.23},  // hombro izquierdo
-    {"left": 0.65, "top": 0.23},  // hombro derecho
-    {"left": 0.30, "top": 0.35},  // brazo izquierdo
-    {"left": 0.75, "top": 0.35},  // brazo derecho
-    {"left": 0.30, "top": 0.50},  // antebrazo izquierdo
-    {"left": 0.76, "top": 0.50},  // antebrazo derecho
-    {"left": 0.28, "top": 0.63},  // mano izquierda
-    {"left": 0.78, "top": 0.63},  // mano derecha
-    {"left": 0.53, "top": 0.30},  // pecho
-    {"left": 0.53, "top": 0.45},  // abdomen
-    {"left": 0.43, "top": 0.57},  // cadera izq
-    {"left": 0.62, "top": 0.57},  // cadera der
-    {"left": 0.43, "top": 0.70},  // pierna izq
-    {"left": 0.63, "top": 0.70},  // pierna der
-    {"left": 0.41, "top": 0.82},  // rodilla izq
-    {"left": 0.64, "top": 0.82},  // rodilla der
-    {"left": 0.40, "top": 0.95},   // antepierna izq
-    {"left": 0.65, "top": 0.95},   // antepierna der
-    {"left": 0.43, "top": 1.11},   // pie izq
-    {"left": 0.63, "top": 1.11},    // pie der
-  ];
-
-  late List<bool> _waveVisible;
-
-  @override
-  void initState() {
-    super.initState();
-    _waveVisible = List<bool>.filled(_fixedWavePositions.length, false);
-  }
-  
-
   final List<String> emojiSounds = [
+    // Aquí van los sonidos, uno por cada emoji
     "sounds/sound3.mp3",
     "sounds/sound10.mp3",
     "sounds/sound1.mp3",
@@ -97,145 +68,190 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
   ];
 
   int? selectedEmojiIndex;
+  // final List<Offset> _wavePositions = [];
+  // Posiciones fijas para las ondas (ajusta según tus necesidades)
+  // Usar proporciones para posiciones (relativas al área de la imagen)
+  final List<Map<String, double>> _fixedWavePositions = [
+    {"left": 0.56, "top": 0.06},
+    {"left": 0.45, "top": 0.13},
+    {"left": 0.65, "top": 0.13},
+    {"left": 0.56, "top": 0.18},
+
+    {"left": 0.55, "top": 0.32}, //Pecho 1
+    {"left": 0.39, "top": 0.32}, //clavicula IZQ
+    {"left": 0.71, "top": 0.32}, //clavicula DER
+
+    {"left": 0.30, "top": 0.38}, //brazo IZQ 1
+    {"left": 0.28, "top": 0.48}, //brazo IZQ 2
+    {"left": 0.27, "top": 0.60}, //brazo IZQ 3
+    {"left": 0.26, "top": 0.70}, //brazo IZQ 4
+    {"left": 0.24, "top": 0.80}, //mano IZQ
+    {"left": 0.86, "top": 0.48},
+    {"left": 0.88, "top": 0.68},
+    {"left": 0.90, "top": 0.85},
+    {"left": 0.55, "top": 0.40},
+    {"left": 0.55, "top": 0.60},
+    {"left": 0.43, "top": 0.77},
+    {"left": 0.69, "top": 0.77},
+    {"left": 0.40, "top": 0.95},
+    {"left": 0.72, "top": 0.95},
+    {"left": 0.40, "top": 1.13},
+    {"left": 0.72, "top": 1.13},
+    {"left": 0.40, "top": 1.3},
+    {"left": 0.73, "top": 1.3},
+    {"left": 0.41, "top": 1.5},
+    {"left": 0.7, "top": 1.5},
+  ];
+  // Visibilidad de cada onda
+  late List<bool> _waveVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicialmente todas las ondas están ocultas
+    _waveVisible = List<bool>.filled(_fixedWavePositions.length, false);
+  }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    print("Width: $width, Height: $height");
 
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Fondo
-            Positioned.fill(
-              child: Image.asset(
-                'assets/images/background.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-            // Overlay azul translúcido
-            Positioned.fill(
-              child: Container(
-                color: const Color.fromARGB(255, 6, 98, 196).withOpacity(0.6),
-              ),
-            ),
-            // Contenido principal
-            Positioned.fill(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: height * 0.04),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Escala de dolor',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: width * 0.045,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: width * 0.04),
-                      SizedBox(
-                        width: width * 0.26,
-                        child: Image.asset(
-                          'assets/images/logo_flocas.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: height * 0.03),
-                  Text(
-                    'Hola, ¿cómo está tu dolor hoy?',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.045,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Expanded(
-                    child: Stack(
+      backgroundColor: Color.fromARGB(255, 6, 98, 196).withOpacity(0.6),
+
+      body: PopScope(
+        canPop: false,
+
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Positioned(
-                          top: height * 0.1,
-                          child: Container(
-                            width: width * 0.625,
-                            child: Image.asset(
-                              'assets/images/circulo.png',
-                              fit: BoxFit.cover,
-                            ),
+                        ButtonBack(
+                          width: width,
+                          height: height,
+                        ),
+                        // Text(
+                        //   'Escala de dolor',
+                        //   style: TextStyle(
+                        //     color: Colors.white,
+                        //     fontSize: width * 0.05,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
+                        SizedBox(width: width * 0.04),
+                        SizedBox(
+                          width: width * 0.35,
+                          child: Image.asset(
+                            'assets/images/logo_flocas.png',
+                            fit: BoxFit.cover,
                           ),
                         ),
+                        SizedBox(width: width * 0.15),
+                      ],
+                    ),
+                    SizedBox(height: height * 0.02),
+                    Text(
+                      '¿Cómo está tu dolor hoy?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: width * 0.04,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    //const SizedBox(height: 20),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: height * 0.1,
+                            child: Image.asset(
+                              'assets/images/circulo.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+
+                        // ListView y otros widgets primero
                         ListView.builder(
                           itemCount: emojis.length,
-                          padding: EdgeInsets.symmetric(vertical: height * 0.01, horizontal: width * 0.1),
+                          padding: EdgeInsets.symmetric(vertical: height * 0.02, horizontal: width * 0.05),
                           itemBuilder: (context, index) {
                             final isSelected = selectedEmojiIndex == index;
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
                                   selectedEmojiIndex = index;
+                                  Provider.of<UserProvider>(context, listen: false).setNumberPain(index.toString());
                                 });
                                 if (index != 0) {
                                   _playClickSound(index - 1);
                                 }
                               },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    index.toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: width * 0.055,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(width: width * 0.02),
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.fastEaseInToSlowEaseOut,
-                                    width: isSelected ? width * 0.14 : width * 0.09,
-                                    height: isSelected ? width * 0.14 : width * 0.09,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.yellow.withOpacity(0.8),
-                                              blurRadius: 18,
-                                              spreadRadius: 2,
-                                            ),
-                                          ]
-                                        : [],
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      emojis[index],
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 18),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      index.toString(),
                                       style: TextStyle(
-                                        fontSize: isSelected ? width * 0.065 : width * 0.05,
+                                        color: Colors.white,
+                                        fontSize: width * 0.035,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  ),
-                                ],
+
+                                    SizedBox(width: width * 0.02),
+
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 300),
+                                      curve: Curves.fastEaseInToSlowEaseOut,
+                                        width: isSelected ? width * 0.15 : width * 0.08,
+                                        height: isSelected ? width * 0.15 : width * 0.08,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: isSelected
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.yellowAccent.withOpacity(0.8),
+                                              blurRadius: 12,
+                                              spreadRadius: 2,
+                                            )
+                                          ]
+                                        : [],
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          emojis[index],
+                                            style: TextStyle(
+                                              fontSize: isSelected ? width * 0.1 : width * 0.05,
+                                            ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
                         ),
-
                         Container(
-                          margin: EdgeInsets.only(left: width * 0.05),
-                          width: width * 0.6,
-                          child: WaveTapScreenTablet(),
+                          padding: EdgeInsets.all(width * 0.05),
+                          margin: EdgeInsets.only(right: width * 0.2),
+                          child: WaveTapScreen(captureKey: _screenshotKey), //captureKey: _screenshotKey
                         ),
                       ],
                     ),
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
@@ -245,10 +261,10 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
 
                         child: Text(
                           'Diclofenaco sódico + Betametasona\n+ Hidroxocobalamina',
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.start,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: width * 0.04,
+                            fontSize: width * 0.02,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -264,80 +280,198 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator()
-                            : IconButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  try {
-                                    final userProvider =
-                                        Provider.of<UserProvider>(context,
-                                            listen: false);
-                                    final userDocumentId = userProvider.getUid;
-                                    final patientId = userProvider.getPatientId;
-
-                                    if (userDocumentId == null ||
-                                        patientId == null) {
-                                      print(
-                                          "Error: userDocumentId o patientId es nulo.");
-                                      // Opcional: Mostrar un mensaje al usuario.
-                                      return;
-                                    }
-
-                                    final imageData = await _capturarImagen();
-                                    if (imageData != null) {
-                                      final storageService = StorageService();
-                                      final imageUrl =
-                                          await storageService.uploadImage(
-                                              imageData,
-                                              userDocumentId,
-                                              patientId);
-
-                                      if (imageUrl != null) {
-                                        // Guardar la URL en Firestore
-                                        await FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc(userDocumentId)
-                                            .collection('patients')
-                                            .doc(patientId)
-                                            .update({
-                                          'painScaleImage': imageUrl
-                                        });
-                                        print(
-                                            "Imagen subida y URL guardada con éxito.");
-                                      } else {
-                                        print("Error al subir la imagen.");
-                                      }
-                                    } else {
-                                      print("Error al capturar la imagen.");
-                                    }
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MobileDataScreen(),
-                                      ),
-                                    );
-                                  } finally {
+                          ? const CircularProgressIndicator()
+                          : IconButton(
+                              onPressed: widget.isEditing == false
+                                ? () async {
                                     setState(() {
-                                      _isLoading = false;
+                                      _isLoading = true;
                                     });
+                                    try {
+                                      final userProvider =
+                                          Provider.of<UserProvider>(context,
+                                              listen: false);
+                                      final patientViewModel = Provider.of<
+                                          PatientViewModel>(context,
+                                          listen: false);
+
+                                      final userId = userProvider.getUid;
+                                      final patientId = widget.patientId;
+
+                                      if (userId != null &&
+                                          patientId != null) {
+                                        final imageBytes =
+                                            await _capturarImagen();
+
+                                        if (imageBytes != null) {
+                                          userProvider
+                                              .setPatientPainScaleImage(
+                                                  imageBytes);
+
+                                          final imageUrl =
+                                              await StorageService()
+                                                  .uploadImage(imageBytes,
+                                                      userId, patientId);
+
+                                          if (imageUrl != null) {
+                                            await patientViewModel.updatePatientImage(
+                                              userDocumentId: userId,
+                                              patientId: patientId,
+                                              imageUrl: imageUrl,
+                                            );
+
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                  'Estado',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.03,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  widget.isEditing
+                                                    ? 'Paciente actualizado!'
+                                                    : 'Paciente registrado!',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.025,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pushAndRemoveUntil(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => const OptionsTabletScreen(),
+                                                      ),
+                                                      (route) => false,
+                                                    ),
+                                                    child: Text(
+                                                      'Regresar',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.025,
+                                                        color: Colors.red,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) =>
+                                            //         const MobileDataScreen(),
+                                            //   ),
+                                            // );
+                                          }
+                                        }
+                                      }
+                                    } catch (e) {
+                                      print(
+                                          "Error al guardar la imagen y navegar: $e");
+                                    } finally {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    }
                                   }
-                                },
-                                icon: Icon(Icons.arrow_forward_sharp,
-                                    color: Colors.black, size: width * 0.06),
+                                : () async {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    try {
+                                      final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                      final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
+                                      final userId = userProvider.getUid;
+                                      final patientId = widget.patient?.uid;
+
+                                      if (userId != null && patientId != null) {
+                                        final imageBytes = await _capturarImagen();
+
+                                        if (imageBytes != null) {
+                                          userProvider.setPatientPainScaleImage(imageBytes);
+
+                                          final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
+
+                                          if (imageUrl != null) {
+                                            await patientViewModel.updatePatientImage(
+                                              userDocumentId: userId,
+                                              patientId: patientId,
+                                              imageUrl: imageUrl,
+                                            );
+
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                  'Estado',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.03,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  widget.isEditing
+                                                    ? 'Paciente actualizado!'
+                                                    : 'Paciente registrado!',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: width * 0.025,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pushAndRemoveUntil(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => const OptionsTabletScreen(),
+                                                      ),
+                                                      (route) => false,
+                                                    ),
+                                                    child: Text(
+                                                      'Regresar',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.025,
+                                                        color: Colors.red,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    } catch (e) {
+                                      print(
+                                          "Error al guardar la imagen y navegar: $e");
+                                    } finally {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    }
+                                  },
+                              icon: Icon(
+                                Icons.arrow_forward_sharp,
+                                color: Colors.black, size: width * 0.06
                               ),
+                            ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                ]
+              )
+            )],
+          )),
+      ));
   }
 }
