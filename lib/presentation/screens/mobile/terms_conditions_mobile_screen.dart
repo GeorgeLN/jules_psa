@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 
 import '../screens.dart';
 
@@ -17,6 +16,12 @@ bool isCheckboxCheckedM = false;
 bool isbuttonEnabledM = false;
 
 class _TermsConditionsMobileScreenState extends State<TermsConditionsMobileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    isbuttonEnabledM = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
