@@ -58,10 +58,11 @@ class PatientViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updatePatientImage({
+  Future<bool> updatePatientPainData({
     required String userDocumentId,
     required String patientId,
     required String imageUrl,
+    required String dolorGeneral,
   }) async {
     try {
       _setState(ViewState.loading);
@@ -70,12 +71,13 @@ class PatientViewModel extends ChangeNotifier {
       PatientModel? patient = await _userRepository.getPatient(patientId);
 
       if (patient != null) {
-        // Actualizar la URL de la imagen
+        // Actualizar la URL de la imagen y el dolor general
         PatientModel updatedPatient = PatientModel(
           uid: patient.uid,
           nombre: patient.nombre,
           edad: patient.edad,
           imagen: imageUrl,
+          dolorGeneral: dolorGeneral,
         );
 
         // Actualizar el paciente en la colección de pacientes

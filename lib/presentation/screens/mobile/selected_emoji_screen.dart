@@ -314,10 +314,12 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                                       userId, patientId);
 
                                           if (imageUrl != null) {
-                                            await patientViewModel.updatePatientImage(
+                                            await patientViewModel.updatePatientPainData(
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
+                                              dolorGeneral:
+                                                  userProvider.getNumberPain,
                                             );
 
                                             showDialog(
@@ -400,10 +402,12 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                           final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
                                           if (imageUrl != null) {
-                                            await patientViewModel.updatePatientImage(
+                                            await patientViewModel.updatePatientPainData(
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
+                                              dolorGeneral:
+                                                  userProvider.getNumberPain,
                                             );
 
                                             showDialog(

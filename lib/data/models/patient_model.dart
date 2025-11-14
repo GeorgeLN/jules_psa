@@ -6,22 +6,26 @@ class PatientModel {
   final String edad;
   final String imagen;
   final String uid;
+  final String? dolorGeneral;
 
   PatientModel({
     required this.nombre,
     required this.edad,
     required this.imagen,
     required this.uid,
+    this.dolorGeneral,
   });
 
   factory PatientModel.fromSnapshot(DocumentSnapshot snapshot) {
-    final patient = PatientModel.fromJson(snapshot.data() as Map<String, dynamic>);
+    final patient =
+        PatientModel.fromJson(snapshot.data() as Map<String, dynamic>);
 
     return PatientModel(
       uid: snapshot.id,
       nombre: patient.nombre,
       edad: patient.edad,
       imagen: patient.imagen,
+      dolorGeneral: patient.dolorGeneral,
     );
   }
 
@@ -31,6 +35,7 @@ class PatientModel {
       nombre: json['nombre'],
       edad: json['edad'],
       imagen: json['imagen'],
+      dolorGeneral: json['dolorGeneral'],
     );
   }
 
@@ -40,6 +45,7 @@ class PatientModel {
       'nombre': nombre,
       'edad': edad,
       'imagen': imagen,
+      'dolorGeneral': dolorGeneral,
     };
   }
 }
