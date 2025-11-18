@@ -14,18 +14,32 @@ class MobileDataScreen extends StatelessWidget {
     final patient = Provider.of<UserProvider>(context).getPatientModel;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 8, 151, 84),
+      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
       body: PopScope(
         canPop: false,
         child: SafeArea(
           child: patient == null
-              ? Center(
-                  child: Text(
-                    'No se ha seleccionado un paciente',
-                    style: GoogleFonts.poppins(fontSize: width * 0.05, color: Colors.white),
+          ? Center(
+              child: Text(
+                'No se ha seleccionado un paciente',
+                style: GoogleFonts.poppins(fontSize: width * 0.05, color: Colors.white),
+              ),
+            )
+          : Stack(
+            children: [
+              Center(
+                child: Container(
+                  width: width * 0.9,
+                  height: height * 0.9,
+                  margin: EdgeInsets.only(bottom: height * 0.125), //CONTIONUAR AQUÍ
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    shape: BoxShape.circle,
                   ),
-                )
-              : Column(
+                ),
+              ),
+              Positioned.fill(
+                child: Column(
                   children: [
                     Padding(
                       padding: EdgeInsets.all(width * 0.03),
@@ -78,7 +92,15 @@ class MobileDataScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            '${patient.nombre}, ${patient.edad} años',
+                            '${patient.nombre}, ${patient.edad} años.',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            'Su dolor general es de <${patient.dolorGeneral!}>',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontSize: width < 800 ? width * 0.04 : width * 0.0325,
@@ -113,6 +135,9 @@ class MobileDataScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
         ),
       ),
     );

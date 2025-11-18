@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pain_scale_app/data/repositories/auth_repository.dart';
 import 'package:pain_scale_app/presentation/screens/screens.dart';
@@ -43,6 +44,7 @@ class _RegisterMobileScreenState extends State<RegisterMobileScreen> {
         );
 
         if (user != null) {
+          Provider.of<UserProvider>(context, listen: false).setIsRegisted(true);
           Navigator.push(
             context,
             MaterialPageRoute(

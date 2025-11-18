@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pain_scale_app/presentation/screens/tablet/options_tablet_screen.dart';
+import 'package:pain_scale_app/presentation/screens/tablet/first_tablet_screen.dart';
 
 class TermsConditionsTabletScreen extends StatefulWidget {
 
@@ -110,7 +110,7 @@ class ContinueButtonT extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const OptionsTabletScreen(),
+              builder: (context) => const FirstTabletScreen(),
             ),
           );
         }

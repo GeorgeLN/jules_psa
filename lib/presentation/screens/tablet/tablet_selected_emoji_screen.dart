@@ -170,11 +170,15 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                     Expanded(
                       child: Stack(
                         children: [
-                          Positioned(
-                            top: height * 0.1,
-                            child: Image.asset(
-                              'assets/images/circulo.png',
-                              fit: BoxFit.contain,
+                          Center(
+                            child: Container(
+                              width: width * 0.9,
+                              height: height * 0.9,
+                              
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.6),
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ),
 
@@ -304,22 +308,16 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                                             await _capturarImagen();
 
                                         if (imageBytes != null) {
-                                          userProvider
-                                              .setPatientPainScaleImage(
-                                                  imageBytes);
+                                          userProvider.setPatientPainScaleImage(imageBytes);
 
-                                          final imageUrl =
-                                              await StorageService()
-                                                  .uploadImage(imageBytes,
-                                                      userId, patientId);
+                                          final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
                                           if (imageUrl != null) {
                                             await patientViewModel.updatePatientPainData(
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
-                                              dolorGeneral:
-                                                  userProvider.getNumberPain,
+                                              dolorGeneral: userProvider.getNumberPain!,
                                             );
 
                                             showDialog(
@@ -406,8 +404,7 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
-                                              dolorGeneral:
-                                                  userProvider.getNumberPain,
+                                              dolorGeneral: userProvider.getNumberPain!,
                                             );
 
                                             showDialog(
@@ -436,7 +433,7 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                                                     onPressed: () => Navigator.pushAndRemoveUntil(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => const OptionsTabletScreen(),
+                                                        builder: (context) => const PatientsMobileScreen(),
                                                       ),
                                                       (route) => false,
                                                     ),

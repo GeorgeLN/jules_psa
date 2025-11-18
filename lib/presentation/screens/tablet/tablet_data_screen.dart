@@ -14,18 +14,21 @@ class TabletDataScreen extends StatelessWidget {
     final patient = Provider.of<UserProvider>(context).getPatientModel;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 8, 151, 84),
+      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
       body: PopScope(
         canPop: false,
         child: SafeArea(
           child: patient == null
-              ? Center(
-                  child: Text(
-                    'No se ha seleccionado un paciente',
-                    style: GoogleFonts.poppins(fontSize: width * 0.03, color: Colors.white),
-                  ),
-                )
-              : Column(
+          ? Center(
+              child: Text(
+                'No se ha seleccionado un paciente',
+                style: GoogleFonts.poppins(fontSize: width * 0.03, color: Colors.white),
+              ),
+            )
+          : Stack(
+            children: [
+              Positioned.fill(
+                child: Column(
                   children: [
                     Padding(
                       padding: EdgeInsets.all(width * 0.03),
@@ -85,6 +88,14 @@ class TabletDataScreen extends StatelessWidget {
                               color: Colors.black,
                             ),
                           ),
+                          Text(
+                            'Su dolor general es de <${patient.dolorGeneral!}>',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: width < 800 ? width * 0.04 : width * 0.0325,
+                              color: Colors.black,
+                            ),
+                          ),
                           SizedBox(height: height * 0.02),
                           SizedBox(
                             width: width * 0.5,
@@ -113,6 +124,9 @@ class TabletDataScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
         ),
       ),
     );

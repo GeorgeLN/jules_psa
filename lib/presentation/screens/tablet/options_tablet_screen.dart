@@ -32,68 +32,99 @@ class OptionsTabletScreen extends StatelessWidget {
               horizontal: width * 0.05,
             ),
 
-            child: Column(
+            child: Stack(
               children: [
-                SizedBox(height: height * 0.025),
-
-                Container(
-                  width: width,
-
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          //Logout action
-                          FirebaseAuth.instance.signOut();
-                          Provider.of<UserProvider>(context, listen: false).clearUser();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: ( _ ) => LoginTabletScreen()
+                Center(
+                  child: Container(
+                    width: width * 0.9,
+                    height: height * 0.9,
+                    
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    SizedBox(height: height * 0.075),
+                
+                    Container(
+                      width: width,
+                
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              //Logout action
+                              FirebaseAuth.instance.signOut();
+                              Provider.of<UserProvider>(context, listen: false).clearUser();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ( _ ) => LoginTabletScreen(),
+                                ),
+                                (route) => false
+                              );
+                            },
+                            icon: Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                              size: width * 0.05,
                             ),
-                            (route) => false
-                          );
-                        },
-                        icon: Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                          size: width * 0.05,
-                        ),
-                      )
-                    ],
+                          )
+                        ],
+                      ),
+                    ),
+                
+                    SizedBox(height: height * 0.175),
+                
+                    Text(
+                      'Seleccione una de las\nsiguientes opciones',
+                      textAlign: TextAlign.center,
+                
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: width * 0.03,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                
+                    SizedBox(height: height * 0.01),
+                
+                    OptionButtonT(
+                      width: width,
+                      height: height,
+                      text: 'Agregar nuevo paciente',
+                
+                      widg: TabletDataUserScreen(isEditing: false),
+                    ),
+                
+                    OptionButtonT(
+                      width: width,
+                      height: height,
+                      text: 'Ver listado de pacientes',
+                
+                      widg: PatientsTabletScreen(),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  bottom: height * 0.015,
+
+                  child: Container(
+                    width: width * 0.55,
+                    height: height * 0.1,
+                    margin: EdgeInsets.only(left: width * 0.17),
+                  
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/logo_flocas.png'),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-
-                SizedBox(height: height * 0.175),
-
-                Text(
-                  'Seleccione una de las siguientes opciones',
-                  textAlign: TextAlign.center,
-
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: width * 0.03,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                SizedBox(height: height * 0.01),
-
-                OptionButtonT(
-                  width: width,
-                  height: height,
-                  text: 'Agregar nuevo paciente',
-
-                  widg: TabletDataUserScreen(isEditing: false),
-                ),
-
-                OptionButtonT(
-                  width: width,
-                  height: height,
-                  text: 'Ver listado de pacientes',
-
-                  widg: PatientsTabletScreen(),
                 ),
               ],
             ),
@@ -121,7 +152,7 @@ class OptionButtonT extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width * 0.9,
+      width: width * 0.75,
       margin: EdgeInsets.only(
         top: height * 0.025,
       ),

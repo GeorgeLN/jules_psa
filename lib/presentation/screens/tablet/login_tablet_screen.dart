@@ -37,6 +37,7 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
 
         if (user != null) {
           Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
+          Provider.of<UserProvider>(context, listen: false).setIsRegisted(false);
 
           Navigator.push(
             context,

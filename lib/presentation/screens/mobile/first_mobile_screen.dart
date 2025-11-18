@@ -222,7 +222,7 @@ class _FirstMobileScreenState extends State<FirstMobileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const TermsConditionsMobileScreen(),
+                  builder: (context) => const OptionsMobileScreen(),
                 ),
               );
             },

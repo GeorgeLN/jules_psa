@@ -20,7 +20,7 @@ class ButtonBack extends StatelessWidget {
       child: Icon(
         Icons.arrow_back,
         color: Colors.white,
-        size: width < 800 ? width * 0.04 : width * 0.05,
+        size: width < 800 ? width * 0.075 : width * 0.05,
       ),
     );
   }

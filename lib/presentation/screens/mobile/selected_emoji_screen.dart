@@ -170,11 +170,16 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                     Expanded(
                       child: Stack(
                         children: [
-                          Positioned(
-                            top: height * 0.1,
-                            child: Image.asset(
-                              'assets/images/circulo.png',
-                              fit: BoxFit.contain,
+                          Center(
+                            child: Container(
+                              width: width * 0.9,
+                              height: height * 0.9,
+                              margin: EdgeInsets.only(bottom: height * 0.1),
+                              
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.6),
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ),
         
@@ -318,8 +323,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
-                                              dolorGeneral:
-                                                  userProvider.getNumberPain,
+                                              dolorGeneral: userProvider.getNumberPain!,
                                             );
 
                                             showDialog(
@@ -348,7 +352,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                                     onPressed: () => Navigator.pushAndRemoveUntil(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => const OptionsMobileScreen(),
+                                                        builder: (context) => const PatientsMobileScreen(),
                                                       ),
                                                       (route) => false,
                                                     ),
@@ -406,8 +410,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
-                                              dolorGeneral:
-                                                  userProvider.getNumberPain,
+                                              dolorGeneral: userProvider.getNumberPain!,
                                             );
 
                                             showDialog(
@@ -436,7 +439,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                                     onPressed: () => Navigator.pushAndRemoveUntil(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => const OptionsMobileScreen(),
+                                                        builder: (context) => const PatientsMobileScreen(),
                                                       ),
                                                       (route) => false,
                                                     ),

@@ -2,7 +2,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pain_scale_app/data/core/widgets/back_button.dart';
 import 'package:pain_scale_app/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -31,73 +30,103 @@ class OptionsMobileScreen extends StatelessWidget {
               horizontal: width * 0.05,
             ),
             
-            child: Column(
+            child: Stack(
               children: [
-                SizedBox(height: height * 0.025),
-          
-                Container(
-                  width: width,
-                  
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [                  
-                      IconButton(
-                        onPressed: () {
-                          //Logout action
-                          FirebaseAuth.instance.signOut();
-                          Provider.of<UserProvider>(context, listen: false).clearUser();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: ( _ ) => LoginMobileScreen()
+                Center(
+                  child: Container(
+                    width: width * 0.9,
+                    height: height * 0.9,
+                    
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    SizedBox(height: height * 0.075),
+                    Container(
+                      width: width,
+                      
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [                  
+                          IconButton(
+                            onPressed: () {
+                              //Logout action
+                              FirebaseAuth.instance.signOut();
+                              Provider.of<UserProvider>(context, listen: false).clearUser();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ( _ ) => LoginMobileScreen(),
+                                ),
+                                (route) => false
+                              );
+                            },
+                            icon: Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                              size: width * 0.07,
                             ),
-                            (route) => false
-                          );
-                        },
-                        icon: Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                          size: width * 0.07,
-                        ),
-                      )
-                    ],
+                          ),
+                        ],
+                      ),
+                    ),
+                          
+                    SizedBox(height: height * 0.175),
+                          
+                    Text(
+                      'Seleccione una de las\nsiguientes opciones',
+                      textAlign: TextAlign.center,
+                      
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: width * 0.0475,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                          
+                    SizedBox(height: height * 0.01),
+                      
+                    OptionButton(
+                      width: width,
+                      height: height,
+                      text: 'Agregar nuevo paciente',
+                          
+                      widg: MobileDataUserScreen(isEditing: false),
+                    ),
+                          
+                    OptionButton(
+                      width: width,
+                      height: height,
+                      text: 'Ver listado de pacientes',
+                          
+                      widg: PatientsMobileScreen(),
+                    ),
+                          
+                    // Text(
+                    //   'uid: ${Provider.of<UserProvider>(context).getUid}',
+                    // ),
+                  ],
+                ),
+                Positioned(
+                  bottom: height * 0.01,
+
+                  child: Container(
+                    width: width * 0.6,
+                    height: height * 0.2,
+                    margin: EdgeInsets.only(left: width * 0.175),
+                  
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/logo_flocas.png'),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
-          
-                SizedBox(height: height * 0.175),
-          
-                Text(
-                  'Seleccione una de las siguientes opciones',
-                  textAlign: TextAlign.center,
-                  
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: width * 0.046,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-          
-                SizedBox(height: height * 0.01),
-                  
-                OptionButton(
-                  width: width,
-                  height: height,
-                  text: 'Agregar nuevo paciente',
-          
-                  widg: MobileDataUserScreen(isEditing: false),
-                ),
-          
-                OptionButton(
-                  width: width,
-                  height: height,
-                  text: 'Ver listado de pacientes',
-          
-                  widg: PatientsMobileScreen(),
-                ),
-          
-                // Text(
-                //   'uid: ${Provider.of<UserProvider>(context).getUid}',
-                // ),
               ],
             ),
           ),
@@ -124,7 +153,7 @@ class OptionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width * 0.9,
+      width: width * 0.75,
       margin: EdgeInsets.only(
         top: height * 0.025,
       ),
@@ -151,7 +180,7 @@ class OptionButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: width * 0.046,
+            fontSize: width * 0.0475,
             fontWeight: FontWeight.bold,
           ),
         ),

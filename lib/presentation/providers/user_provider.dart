@@ -14,6 +14,7 @@ class UserProvider with ChangeNotifier {
   String? _patientUid;
   String? _patientName;
   Uint8List? _patientPainScaleImage;
+  bool? _isRegisted;
   
   String? get getUid => _uid;
   UserModel? get getUserModel => _userModel;
@@ -23,6 +24,12 @@ class UserProvider with ChangeNotifier {
   String? get getPatientId => _patientUid;
   String? get getPatientName => _patientName;
   Uint8List? get getPatientPainScaleImage => _patientPainScaleImage;
+  bool? get getIsRegisted => _isRegisted;
+
+  void setIsRegisted(bool isRegisted) {
+    _isRegisted = isRegisted;
+    notifyListeners();
+  }
 
   void setUid(String uid) {
     _uid = uid;
@@ -71,6 +78,7 @@ class UserProvider with ChangeNotifier {
 
   void clearUser() {
     _uid = null;
+    _isRegisted = null;
     notifyListeners();
   }
 }

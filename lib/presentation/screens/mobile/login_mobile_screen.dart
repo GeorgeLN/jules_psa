@@ -28,8 +28,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      final authRepository =
-          Provider.of<AuthRepository>(context, listen: false);
+      final authRepository = Provider.of<AuthRepository>(context, listen: false);
       try {
         final user = await authRepository.signInWithEmailAndPassword(
           _emailController.text,
@@ -37,7 +36,8 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
         );
         if (user != null) {
           Provider.of<UserProvider>(context, listen: false).setUid(user.uid);
-
+          Provider.of<UserProvider>(context, listen: false).setIsRegisted(false);
+          
           Navigator.push(
             context,
             MaterialPageRoute(
