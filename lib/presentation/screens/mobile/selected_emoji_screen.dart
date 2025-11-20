@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pain_scale_app/data/models/patient_model.dart';
+import 'package:pain_scale_app/data/repositories/user_repository.dart';
 import 'package:pain_scale_app/presentation/providers/providers.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:pain_scale_app/data/core/widgets/back_button.dart';
@@ -304,58 +305,65 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                           final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
                                           if (imageUrl != null) {
-                                            await patientViewModel.updatePatientPainData(
+                                            final success =await patientViewModel.updatePatientPainData(
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
                                               dolorGeneral: userProvider.getNumberPain!,
                                             );
 
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) => PopScope(
-                                                canPop: false,
-                                                child: AlertDialog(
-                                                  title: Text(
-                                                    'App Escala de Dolor',
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: width * 0.05,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  content: Text(
-                                                    widget.isEditing
-                                                      ? 'Paciente actualizado!'
-                                                      : 'Paciente registrado!',
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: width * 0.04,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () => Navigator.pushAndRemoveUntil(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => const NewPatientDataScreen(returnScreen: PatientsMobileScreen()),
-                                                        ),
-                                                        (route) => false,
-                                                      ),
-                                                      child: Text(
-                                                        'Continuar',
-                                                        style: GoogleFonts.poppins(
-                                                          fontSize: width * 0.04,
-                                                          color: Colors.red,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),
+                                            if (success && mounted) {
+                                              final updatedPatient = await UserRepository().getPatient(patientId);
+                                              if (updatedPatient != null) {
+                                                Provider.of<UserProvider>(context, listen: false).setPatientModel(updatedPatient);
+                                              }
+
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) => PopScope(
+                                                  canPop: false,
+                                                  child: AlertDialog(
+                                                    title: Text(
+                                                      'App Escala de Dolor',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.05,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w500,
                                                       ),
                                                     ),
-                                                  ],
+                                                    content: Text(
+                                                      widget.isEditing
+                                                        ? 'Paciente actualizado!'
+                                                        : 'Paciente registrado!',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.04,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => const NewPatientDataScreen(returnScreen: PatientsMobileScreen()),
+                                                          ),
+                                                          (route) => false,
+                                                        ),
+                                                        child: Text(
+                                                          'Continuar',
+                                                          style: GoogleFonts.poppins(
+                                                            fontSize: width * 0.04,
+                                                            color: Colors.red,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
+                                              );
+                                            }
                                             // Navigator.push(
                                             //   context,
                                             //   MaterialPageRoute(
@@ -394,58 +402,65 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                           final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
                                           if (imageUrl != null) {
-                                            await patientViewModel.updatePatientPainData(
+                                            final success = await patientViewModel.updatePatientPainData(
                                               userDocumentId: userId,
                                               patientId: patientId,
                                               imageUrl: imageUrl,
                                               dolorGeneral: userProvider.getNumberPain!,
                                             );
 
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) => PopScope(
-                                                canPop: false,
-                                                child: AlertDialog(
-                                                  title: Text(
-                                                    'App Escala de Dolor',
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: width * 0.05,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  content: Text(
-                                                    widget.isEditing
-                                                      ? 'Paciente actualizado!'
-                                                      : 'Paciente registrado!',
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: width * 0.04,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () => Navigator.pushAndRemoveUntil(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => const NewPatientDataScreen(returnScreen: PatientsMobileScreen()),
-                                                        ),
-                                                        (route) => false,
-                                                      ),
-                                                      child: Text(
-                                                        'Continuar',
-                                                        style: GoogleFonts.poppins(
-                                                          fontSize: width * 0.04,
-                                                          color: Colors.red,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),
+                                            if (success && mounted) {
+                                              final updatedPatient = await UserRepository().getPatient(patientId);
+                                              if (updatedPatient != null) {
+                                                Provider.of<UserProvider>(context, listen: false).setPatientModel(updatedPatient);
+                                              }
+                                              
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) => PopScope(
+                                                  canPop: false,
+                                                  child: AlertDialog(
+                                                    title: Text(
+                                                      'App Escala de Dolor',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.05,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w500,
                                                       ),
                                                     ),
-                                                  ],
+                                                    content: Text(
+                                                      widget.isEditing
+                                                        ? 'Paciente actualizado!'
+                                                        : 'Paciente registrado!',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: width * 0.04,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => const NewPatientDataScreen(returnScreen: PatientsMobileScreen()),
+                                                          ),
+                                                          (route) => false,
+                                                        ),
+                                                        child: Text(
+                                                          'Continuar',
+                                                          style: GoogleFonts.poppins(
+                                                            fontSize: width * 0.04,
+                                                            color: Colors.red,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
+                                              );
+                                            }
                                           }
                                         }
                                       }
