@@ -339,7 +339,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                                       onPressed: () => Navigator.pushAndRemoveUntil(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) => const PatientsMobileScreen(),
+                                                          builder: (context) => const NewPatientDataScreen(returnScreen: PatientsMobileScreen()),
                                                         ),
                                                         (route) => false,
                                                       ),
@@ -429,7 +429,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                                       onPressed: () => Navigator.pushAndRemoveUntil(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) => const PatientsMobileScreen(),
+                                                          builder: (context) => const NewPatientDataScreen(returnScreen: PatientsMobileScreen()),
                                                         ),
                                                         (route) => false,
                                                       ),
