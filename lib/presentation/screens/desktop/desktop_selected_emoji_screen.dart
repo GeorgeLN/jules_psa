@@ -121,7 +121,7 @@ class _DesktopSelectedEmojiScreenState extends State<DesktopSelectedEmojiScreen>
                     SizedBox(
                       width: width * 0.18,
                       child: Image.asset(
-                        'assets/images/logo_flocas.png',
+                        'assets/images/logotipo.png',
                         fit: BoxFit.cover,
                       ),
                     ),

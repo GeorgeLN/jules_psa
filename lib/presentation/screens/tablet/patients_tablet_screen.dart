@@ -335,22 +335,6 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: height * 0.015,
-
-                child: Container(
-                  width: width * 0.55,
-                  height: height * 0.1,
-                  margin: EdgeInsets.only(left: width * 0.215),
-                
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/logo_flocas.png'),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

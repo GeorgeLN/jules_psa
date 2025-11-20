@@ -107,22 +107,22 @@ class OptionsMobileScreen extends StatelessWidget {
                     // ),
                   ],
                 ),
-                // Positioned( AQUÍ VA EL NUEVO LOGO.
-                //   bottom: height * 0.01,
+                Positioned(
+                  bottom: 0,
 
-                //   child: Container(
-                //     width: width * 0.6,
-                //     height: height * 0.2,
-                //     margin: EdgeInsets.only(left: width * 0.175),
+                  child: Container(
+                    width: width * 0.4,
+                    height: height * 0.2,
+                    margin: EdgeInsets.only(left: width * 0.3),
                   
-                //     decoration: BoxDecoration(
-                //       image: DecorationImage(
-                //         image: AssetImage('assets/images/logo_flocas.png'),
-                //         fit: BoxFit.contain,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/logotipo.png'),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

@@ -142,31 +142,12 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: height * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ButtonBack(
-                          width: width,
-                          height: height,
-                        ),
-                        // Text(
-                        //   'Escala de dolor',
-                        //   style: TextStyle(
-                        //     color: Colors.white,
-                        //     fontSize: width * 0.05,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
-                        SizedBox(width: width * 0.04),
-                        SizedBox(
-                          width: width * 0.35,
-                          child: Image.asset(
-                            'assets/images/logo_flocas.png',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: width * 0.15),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(right: width * 0.8, top: height * 0.02),
+                      child: ButtonBack(
+                        width: width,
+                        height: height,
+                      ),
                     ),
                     SizedBox(height: height * 0.02),
                     Text(
@@ -357,7 +338,7 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                                                     onPressed: () => Navigator.pushAndRemoveUntil(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => const OptionsTabletScreen(),
+                                                        builder: (context) => const PatientsMobileScreen(),
                                                       ),
                                                       (route) => false,
                                                     ),

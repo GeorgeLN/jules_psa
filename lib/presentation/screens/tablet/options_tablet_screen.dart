@@ -120,7 +120,7 @@ class OptionsTabletScreen extends StatelessWidget {
                   
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/logo_flocas.png'),
+                        image: AssetImage('assets/images/logotipo.png'),
                         fit: BoxFit.contain,
                       ),
                     ),

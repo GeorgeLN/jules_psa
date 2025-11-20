@@ -146,11 +146,24 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: TextField(
                             controller: _searchController,
+                            cursorColor: Colors.white,
                             decoration: InputDecoration(
                               labelText: 'Buscar paciente',
-                              labelStyle: const TextStyle(color: Colors.white),
+                              labelStyle: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: width * 0.04,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(width * 0.025),
+                                borderSide: const BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(width * 0.025),
+                                borderSide: const BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(width * 0.025),
+                                borderSide: const BorderSide(color: Colors.white),
                               ),
                               prefixIcon: const Icon(Icons.search, color: Colors.white),
                             ),
@@ -297,16 +310,16 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                 ),
               ),
               // Positioned(
-              //   bottom: height * 0.01,
+              //   bottom: 0,
 
               //   child: Container(
-              //     width: width * 0.6,
+              //     width: width * 0.4,
               //     height: height * 0.2,
-              //     margin: EdgeInsets.only(left: width * 0.2),
+              //     margin: EdgeInsets.only(left: width * 0.3),
                 
               //     decoration: BoxDecoration(
               //       image: DecorationImage(
-              //         image: AssetImage('assets/images/logo_flocas.png'),
+              //         image: AssetImage('assets/images/logotipo.png'),
               //         fit: BoxFit.contain,
               //       ),
               //     ),
