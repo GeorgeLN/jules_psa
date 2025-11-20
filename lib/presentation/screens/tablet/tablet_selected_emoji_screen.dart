@@ -338,12 +338,12 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                                                     onPressed: () => Navigator.pushAndRemoveUntil(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => const PatientsMobileScreen(),
+                                                        builder: (context) => const NewPatientDataScreen(returnScreen: PatientsTabletScreen()),
                                                       ),
                                                       (route) => false,
                                                     ),
                                                     child: Text(
-                                                      'Regresar',
+                                                      'Continuar',
                                                       style: GoogleFonts.poppins(
                                                         fontSize: width * 0.025,
                                                         color: Colors.red,
@@ -425,12 +425,12 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                                                     onPressed: () => Navigator.pushAndRemoveUntil(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => const PatientsMobileScreen(),
+                                                        builder: (context) => const NewPatientDataScreen(returnScreen: PatientsTabletScreen()),
                                                       ),
                                                       (route) => false,
                                                     ),
                                                     child: Text(
-                                                      'Regresar',
+                                                      'Continuar',
                                                       style: GoogleFonts.poppins(
                                                         fontSize: width * 0.025,
                                                         color: Colors.red,
