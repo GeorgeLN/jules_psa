@@ -127,6 +127,17 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
           child: Stack(
             children: [
               Positioned.fill(
+                child: Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: Container(
+                  color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
+                ),
+              ),
+              Positioned.fill(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -177,7 +188,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                               margin: EdgeInsets.only(bottom: height * 0.1),
                               
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.6),
+                                color: Colors.white.withOpacity(0.3),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -293,12 +304,8 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                       _isLoading = true;
                                     });
                                     try {
-                                      final userProvider =
-                                          Provider.of<UserProvider>(context,
-                                              listen: false);
-                                      final patientViewModel = Provider.of<
-                                          PatientViewModel>(context,
-                                          listen: false);
+                                      final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                      final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
 
                                       final userId = userProvider.getUid;
                                       final patientId = widget.patientId;
@@ -313,10 +320,7 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
                                               .setPatientPainScaleImage(
                                                   imageBytes);
 
-                                          final imageUrl =
-                                              await StorageService()
-                                                  .uploadImage(imageBytes,
-                                                      userId, patientId);
+                                          final imageUrl = await StorageService().uploadImage(imageBytes, userId, patientId);
 
                                           if (imageUrl != null) {
                                             await patientViewModel.updatePatientPainData(
@@ -328,44 +332,47 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
 
                                             showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog(
-                                                title: Text(
-                                                  'Estado',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: width * 0.05,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  widget.isEditing
-                                                    ? 'Paciente actualizado!'
-                                                    : 'Paciente registrado!',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: width * 0.04,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () => Navigator.pushAndRemoveUntil(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => const PatientsMobileScreen(),
-                                                      ),
-                                                      (route) => false,
-                                                    ),
-                                                    child: Text(
-                                                      'Regresar',
-                                                      style: GoogleFonts.poppins(
-                                                        fontSize: width * 0.04,
-                                                        color: Colors.red,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
+                                              builder: (context) => PopScope(
+                                                canPop: false,
+                                                child: AlertDialog(
+                                                  title: Text(
+                                                    'App Escala de Dolor',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: width * 0.05,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w500,
                                                     ),
                                                   ),
-                                                ],
+                                                  content: Text(
+                                                    widget.isEditing
+                                                      ? 'Paciente actualizado!'
+                                                      : 'Paciente registrado!',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: width * 0.04,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => const PatientsMobileScreen(),
+                                                        ),
+                                                        (route) => false,
+                                                      ),
+                                                      child: Text(
+                                                        'Continuar',
+                                                        style: GoogleFonts.poppins(
+                                                          fontSize: width * 0.04,
+                                                          color: Colors.red,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             );
                                             // Navigator.push(
@@ -415,44 +422,47 @@ class _SelectedEmojiScreenState extends State<SelectedEmojiScreen> {
 
                                             showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog(
-                                                title: Text(
-                                                  'Estado',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: width * 0.05,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  widget.isEditing
-                                                    ? 'Paciente actualizado!'
-                                                    : 'Paciente registrado!',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: width * 0.04,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () => Navigator.pushAndRemoveUntil(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => const PatientsMobileScreen(),
-                                                      ),
-                                                      (route) => false,
-                                                    ),
-                                                    child: Text(
-                                                      'Regresar',
-                                                      style: GoogleFonts.poppins(
-                                                        fontSize: width * 0.04,
-                                                        color: Colors.red,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
+                                              builder: (context) => PopScope(
+                                                canPop: false,
+                                                child: AlertDialog(
+                                                  title: Text(
+                                                    'App Escala de Dolor',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: width * 0.05,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w500,
                                                     ),
                                                   ),
-                                                ],
+                                                  content: Text(
+                                                    widget.isEditing
+                                                      ? 'Paciente actualizado!'
+                                                      : 'Paciente registrado!',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: width * 0.04,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => const PatientsMobileScreen(),
+                                                        ),
+                                                        (route) => false,
+                                                      ),
+                                                      child: Text(
+                                                        'Continuar',
+                                                        style: GoogleFonts.poppins(
+                                                          fontSize: width * 0.04,
+                                                          color: Colors.red,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             );
                                           }

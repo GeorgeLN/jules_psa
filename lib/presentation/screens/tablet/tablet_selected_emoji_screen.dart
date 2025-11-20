@@ -127,6 +127,17 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
           child: Stack(
             children: [
               Positioned.fill(
+                child: Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: Container(
+                  color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
+                ),
+              ),
+              Positioned.fill(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -176,7 +187,7 @@ class _TabletSelectedEmojiScreenState extends State<TabletSelectedEmojiScreen> {
                               height: height * 0.9,
                               
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.6),
+                                color: Colors.white.withOpacity(0.3),
                                 shape: BoxShape.circle,
                               ),
                             ),

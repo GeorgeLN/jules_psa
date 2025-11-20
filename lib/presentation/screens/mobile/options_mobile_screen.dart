@@ -24,23 +24,19 @@ class OptionsMobileScreen extends StatelessWidget {
           child: Container(
             width: width ,
             height: height,
-            color: Color.fromARGB(255, 6, 98, 196),
-                  
-            padding: EdgeInsets.symmetric(
-              horizontal: width * 0.05,
-            ),
+            color: Color.fromRGBO(0, 80, 166, 1),
             
             child: Stack(
               children: [
-                Center(
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/background.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned.fill(
                   child: Container(
-                    width: width * 0.9,
-                    height: height * 0.9,
-                    
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.6),
-                      shape: BoxShape.circle,
-                    ),
+                    color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
                   ),
                 ),
                 Column(
@@ -111,22 +107,22 @@ class OptionsMobileScreen extends StatelessWidget {
                     // ),
                   ],
                 ),
-                Positioned(
-                  bottom: height * 0.01,
+                // Positioned( AQUÍ VA EL NUEVO LOGO.
+                //   bottom: height * 0.01,
 
-                  child: Container(
-                    width: width * 0.6,
-                    height: height * 0.2,
-                    margin: EdgeInsets.only(left: width * 0.175),
+                //   child: Container(
+                //     width: width * 0.6,
+                //     height: height * 0.2,
+                //     margin: EdgeInsets.only(left: width * 0.175),
                   
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/logo_flocas.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
+                //     decoration: BoxDecoration(
+                //       image: DecorationImage(
+                //         image: AssetImage('assets/images/logo_flocas.png'),
+                //         fit: BoxFit.contain,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

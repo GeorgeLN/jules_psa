@@ -61,10 +61,10 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: Color.fromRGBO(0, 80, 166, 1),
 
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 6, 98, 196),
+        backgroundColor: Color.fromRGBO(0, 80, 166, 1),
         title: Text(
           'Iniciar Sesión',
           style: GoogleFonts.poppins(

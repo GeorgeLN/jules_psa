@@ -14,7 +14,7 @@ class TabletDataScreen extends StatelessWidget {
     final patient = Provider.of<UserProvider>(context).getPatientModel;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
       body: PopScope(
         canPop: false,
         child: SafeArea(
@@ -27,6 +27,17 @@ class TabletDataScreen extends StatelessWidget {
             )
           : Stack(
             children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: Container(
+                  color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
+                ),
+              ),
               Positioned.fill(
                 child: Column(
                   children: [

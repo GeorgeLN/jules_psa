@@ -62,10 +62,10 @@ class _LoginTabletScreenState extends State<LoginTabletScreen> {
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
 
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+        backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
         title: Text(
           'Iniciar Sesión',
           style: GoogleFonts.poppins(

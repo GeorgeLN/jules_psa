@@ -28,7 +28,7 @@ class _TermsConditionsMobileScreenState extends State<TermsConditionsMobileScree
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
       body: PopScope(
         canPop: false,
         
@@ -77,7 +77,7 @@ class _TermsConditionsMobileScreenState extends State<TermsConditionsMobileScree
                           isCheckboxCheckedM = value ?? false;
                         });
                       },
-                      checkColor: Color.fromARGB(255, 6, 98, 196),
+                      checkColor: Color.fromRGBO(0, 80, 166, 1),
                       activeColor: Colors.white,
                       side: BorderSide(
                         color: Colors.white,

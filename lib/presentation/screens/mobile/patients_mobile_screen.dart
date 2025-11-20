@@ -51,7 +51,7 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
     final patients = user?.pacientes ?? [];
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
 
       body: PopScope(
         canPop: false,
@@ -60,15 +60,15 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
           child: patients.isEmpty
           ? Stack(
             children: [
-              Center(
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
                 child: Container(
-                  width: width * 0.9,
-                  height: height * 0.9,
-                  
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.6),
-                    shape: BoxShape.circle,
-                  ),
+                  color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
                 ),
               ),
               Center(
@@ -85,15 +85,15 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
           )
           : Stack(
             children: [
-              Center(
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
                 child: Container(
-                  width: width * 0.9,
-                  height: height * 0.9,
-                  
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.6),
-                    shape: BoxShape.circle,
-                  ),
+                  color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
                 ),
               ),
               SingleChildScrollView(
@@ -262,22 +262,22 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: height * 0.01,
+              // Positioned(
+              //   bottom: height * 0.01,
 
-                child: Container(
-                  width: width * 0.6,
-                  height: height * 0.2,
-                  margin: EdgeInsets.only(left: width * 0.2),
+              //   child: Container(
+              //     width: width * 0.6,
+              //     height: height * 0.2,
+              //     margin: EdgeInsets.only(left: width * 0.2),
                 
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/logo_flocas.png'),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
+              //     decoration: BoxDecoration(
+              //       image: DecorationImage(
+              //         image: AssetImage('assets/images/logo_flocas.png'),
+              //         fit: BoxFit.contain,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

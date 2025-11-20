@@ -50,7 +50,7 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
     final patients = user?.pacientes ?? [];
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 6, 98, 196),
+      backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
 
       body: PopScope(
         canPop: false,
@@ -59,15 +59,15 @@ class _PatientsTabletScreenState extends State<PatientsTabletScreen> {
           child: patients.isEmpty
           ? Stack(
             children: [
-              Center(
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
                 child: Container(
-                  width: width * 0.9,
-                  height: height * 0.9,
-                  
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.6),
-                    shape: BoxShape.circle,
-                  ),
+                  color: Color.fromARGB(255, 6, 98, 196).withValues(alpha: 0.7),
                 ),
               ),
               Center(
