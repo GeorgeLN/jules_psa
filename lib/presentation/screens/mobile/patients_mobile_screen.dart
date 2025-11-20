@@ -16,7 +16,9 @@ class PatientsMobileScreen extends StatefulWidget {
 }
 
 class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
-  late List<bool> _expandedStates;
+  Map<String, bool> _expandedStates = {};
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   Future<void> _refreshPatients() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -26,7 +28,9 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
       userProvider.setUserModel(userModel);
       if (mounted) {
         setState(() {
-          _expandedStates = List<bool>.filled(userModel.pacientes.length, false);
+          _expandedStates = {
+            for (var patient in userModel.pacientes) patient.uid: false
+          };
         });
       }
     }
@@ -37,8 +41,19 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
     super.initState();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final patients = userProvider.getUserModel?.pacientes ?? [];
-    _expandedStates = List<bool>.filled(patients.length, false);
+    _expandedStates = {for (var patient in patients) patient.uid: false};
     _refreshPatients();
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,7 +63,10 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
 
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.getUserModel;
-    final patients = user?.pacientes ?? [];
+    final patients = user?.pacientes.reversed.toList() ?? [];
+    final filteredPatients = patients.where((patient) {
+      return patient.nombre.toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(0, 80, 166, 1),
@@ -124,13 +142,29 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
                           ),
                         ),
                         SizedBox(height: height * 0.02),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              labelText: 'Buscar paciente',
+                              labelStyle: const TextStyle(color: Colors.white),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(width * 0.025),
+                              ),
+                              prefixIcon: const Icon(Icons.search, color: Colors.white),
+                            ),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.02),
                         Container(
-                          height: height * 0.8,
+                          height: height * 0.7,
               
                           child: ListView.builder(
-                            itemCount: patients.length,
+                            itemCount: filteredPatients.length,
                             itemBuilder: (context, index) {
-                              final patient = patients[index];
+                              final patient = filteredPatients[index];
                               return Card(
                                 color: const Color.fromRGBO(39, 54, 114, 1),
                                 margin: EdgeInsets.symmetric(vertical: width * 0.015),
@@ -140,17 +174,17 @@ class _PatientsMobileScreenState extends State<PatientsMobileScreen> {
               
                                 child: ExpansionTile(
                                   backgroundColor: Color.fromRGBO(39, 54, 114, 1),
-                                  initiallyExpanded: _expandedStates[index],
+                                  initiallyExpanded: _expandedStates[patient.uid] ?? false,
                                   onExpansionChanged: (bool expanded) {
                                     setState(() {
-                                      _expandedStates[index] = expanded;
+                                      _expandedStates[patient.uid] = expanded;
                                     });
                                   },
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(width * 0.025),
                                   ),
                                   trailing: Icon(
-                                    _expandedStates[index] ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                    _expandedStates[patient.uid] ?? false ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                                     color: Colors.white,
                                     size: width * 0.08,
                                   ),
